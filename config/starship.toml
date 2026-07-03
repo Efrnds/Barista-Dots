@@ -1,0 +1,95 @@
+# Configuração Starship - Catppuccin / Lavender Style
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](purple)\
+$os\
+$username\
+[](bg:blue fg:purple)\
+$directory\
+[](fg:blue bg:dark_purple)\
+$git_branch\
+$git_status\
+[](fg:dark_purple bg:medium_gray)\
+$nodejs\
+$rust\
+$golang\
+[](fg:medium_gray bg:dark_gray)\
+$time\
+[](fg:dark_gray)\
+$character"""
+
+# Não pula linha ao abrir o terminal
+add_newline = false
+
+[palettes.catppuccin]
+purple = '#b7bdf8'
+blue = '#8cadfa'
+dark_purple = '#c6a0f6'
+medium_gray = '#494d64'
+dark_gray = '#363a4f'
+black = '#24273a'
+
+[palettes.lavender]
+purple = '#a6b1e1'
+blue = '#dcd6f7'
+dark_purple = '#663399'
+medium_gray = '#424874'
+dark_gray = '#424153'
+black = '#24273a'
+
+# Carrega a paleta Lavender por padrão (toggle_theme.sh pode alternar!)
+palette = 'lavender'
+
+[os]
+disabled = false
+style = "bg:purple fg:black"
+
+[os.symbols]
+Arch = "󰣇 "
+
+[username]
+show_always = true
+style_user = "bg:purple fg:black"
+style_root = "bg:purple fg:red"
+format = '[$user]($style)'
+
+[directory]
+style = "bg:blue fg:black"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "bg:dark_purple fg:black"
+format = '[ $symbol$branch ]($style)'
+
+[git_status]
+style = "bg:dark_purple fg:black"
+format = '[($all_status$ahead_behind )]($style)'
+
+[nodejs]
+symbol = " "
+style = "bg:medium_gray fg:green"
+format = '[ $symbol($version) ]($style)'
+
+[rust]
+symbol = " "
+style = "bg:medium_gray fg:red"
+format = '[ $symbol($version) ]($style)'
+
+[golang]
+symbol = " "
+style = "bg:medium_gray fg:blue"
+format = '[ $symbol($version) ]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:dark_gray fg:white"
+format = '[ $time ]($style)'
+
+[character]
+success_symbol = "[ ➜](bold green) "
+error_symbol = "[ ✗](bold red) "

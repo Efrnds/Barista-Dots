@@ -1,0 +1,7 @@
+[user]
+	name = Efrnds
+	email = Efrnds
+[http]
+	sslVerify = false
+[credential]
+	helper = cache

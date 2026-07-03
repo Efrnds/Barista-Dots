@@ -1,0 +1,34 @@
+# Mako Configuration File
+# Styled to match Foot and Hyprland (slate-blue and lavender palette)
+
+# Global options
+font=JetBrainsMono Nerd Font 11
+width=350
+height=150
+margin=15
+padding=15
+border-size=2
+border-radius=12
+
+# Colors (matching foot theme: background #424874, foreground #F4EEFF, active #A6B1E1 / #DCD6F7)
+background-color=#424874e6
+text-color=#F4EEFF
+border-color=#A6B1E1
+progress-color=over #DCD6F7
+
+# Behavior
+default-timeout=5000
+sort=-time
+layer=top
+anchor=top-right
+
+# Urgency Urgencies
+[urgency=low]
+border-color=#424874
+text-color=#A6B1E1
+default-timeout=3000
+
+[urgency=high]
+border-color=#ed8796
+text-color=#F4EEFF
+default-timeout=0

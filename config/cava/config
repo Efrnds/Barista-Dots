@@ -1,0 +1,31 @@
+# Configuração do CAVA - Tema Lavender Dream
+
+[general]
+# Taxa de quadros por segundo (framerate)
+framerate = 60
+
+# Sensibilidade automática
+autosens = 1
+
+[input]
+# Usa o PipeWire/PulseAudio para capturar o áudio automaticamente
+method = pulse
+source = auto
+
+[output]
+# Método de renderização no terminal
+method = ncurses
+
+[color]
+# Ativa o degradê de cores
+gradient = 1
+
+# Degradê do roxo-lavanda para o lilás claro do tema
+gradient_color_1 = '#A6B1E1'
+gradient_color_2 = '#DCD6F7'
+
+[bar]
+# Caractere usado para desenhar as barras
+# █ é o padrão sólido clean
+bar_width = 2
+bar_spacing = 1

@@ -1,0 +1,195 @@
+@import "colors.css";
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Noto Color Emoji";
+    font-size: 13px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Torna a janela do Waybar transparente para que as margens criem o efeito de ilhas flutuantes */
+window#waybar {
+    background-color: transparent;
+    color: @text_color;
+}
+
+/* Estilo das Ilhas Flutuantes */
+.modules-left,
+.modules-center,
+.modules-right {
+    background-color: @bg_color;
+    border: 1px solid @border_color;
+    border-radius: 12px;
+    padding: 2px 10px;
+}
+
+.modules-left {
+    margin-left: 2px;
+}
+
+.modules-right {
+    margin-right: 2px;
+}
+
+/* Área de Trabalho / Workspaces */
+#workspaces button {
+    background: transparent;
+    color: rgba(244, 238, 255, 0.35); /* Cor atenuada */
+    border-radius: 50%;
+    padding: 0 6px;
+    margin: 0 2px;
+    min-width: 20px;
+    transition: all 0.3s cubic-bezier(.55,0,.1,1);
+}
+
+#workspaces button.active {
+    color: @active_color;
+    font-weight: bold;
+}
+
+#workspaces button:hover {
+    color: @accent_color;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Módulos Gerais */
+#cpu,
+#memory,
+#disk,
+#clock,
+#network,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#battery,
+#custom-updates,
+#custom-notification,
+#custom-wallpaper,
+#custom-power,
+#mpris {
+    color: @text_color;
+    padding: 0 8px;
+    margin: 0 2px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* Agrupadores internos (pills) para visual minimalista */
+.group-system-stats,
+.group-connections,
+.group-media {
+    background-color: @pill_bg;
+    border-radius: 8px;
+    padding: 0 4px;
+    margin: 0 4px;
+}
+
+/* Sub-módulos dentro de group-system-stats */
+#cpu {
+    color: @active_color;
+}
+
+#memory {
+    color: @accent_color;
+}
+
+#disk {
+    color: @text_color;
+}
+
+#cpu.warning, #memory.warning, #disk.warning {
+    color: #eed49f;
+}
+
+#cpu.critical, #memory.critical, #disk.critical {
+    color: #ed8796;
+    font-weight: bold;
+}
+
+/* Sub-módulos dentro de group-connections */
+#network {
+    color: @active_color;
+}
+
+#network.disconnected {
+    color: #ed8796;
+}
+
+#bluetooth {
+    color: @accent_color;
+}
+
+/* Sub-módulos dentro de group-media */
+#pulseaudio {
+    color: @accent_color;
+}
+
+#backlight {
+    color: @active_color;
+}
+
+/* Bateria */
+#battery {
+    color: @text_color;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @active_color;
+}
+
+#battery.warning {
+    color: #eed49f;
+}
+
+#battery.critical {
+    color: #ed8796;
+    animation-name: blink;
+    animation-duration: 0.8s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* Relógio Central & Notificações */
+#clock {
+    color: @text_color;
+    font-weight: bold;
+}
+
+#custom-updates {
+    color: @accent_color;
+}
+
+#custom-notification {
+    color: @active_color;
+}
+
+#custom-wallpaper {
+    color: @accent_color;
+}
+
+#mpris {
+    color: @accent_color;
+}
+
+/* Botão Power */
+#custom-power {
+    color: #ed8796;
+    font-size: 15px;
+    padding-right: 4px;
+    margin-left: 6px;
+}
+
+#custom-power:hover {
+    color: #f5c2e7;
+    background-color: rgba(237, 135, 150, 0.2);
+}
+
+@keyframes blink {
+    to {
+        background-color: rgba(237, 135, 150, 0.3);
+        color: @text_color;
+    }
+}
