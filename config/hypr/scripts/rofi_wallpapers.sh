@@ -13,7 +13,8 @@ rofi_cmd() {
 }
 
 # Opções do menu
-options="🎲 Aleatório (Com cores do tema)
+options="🎨 Color Picker (Criar tema a partir de uma cor)
+🎲 Aleatório (Com cores do tema)
 🎲 Aleatório (Sem restrição de cor)
 ❤️ Curtir Wallpaper Atual (Salvar Local)
 📁 Meus Favoritos Locais (Aleatório)
@@ -35,6 +36,9 @@ if [ -z "$choice" ]; then
 fi
 
 case "$choice" in
+    "🎨 Color Picker (Criar tema a partir de uma cor)")
+        ~/dotfiles/scripts/rice_color_picker.sh
+        ;;
     "🎲 Aleatório (Com cores do tema)")
         ~/.config/hypr/mudar_fundo.sh
         ;;

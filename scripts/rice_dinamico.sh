@@ -60,6 +60,8 @@ pkill -USR2 waybar || pkill waybar ; waybar &
 # Vamos apenas apontar o colors.ini do foot para lá
 ln -sf "$HOME/.cache/wal/colors.ini" "$HOME/.config/foot/colors.ini"
 # Ou se preferir gerar manualmente:
+killall -USR1 foot || true
+
 FOOT_COLORS="$HOME/.config/foot/colors.ini"
 cat <<EOF > "$FOOT_COLORS"
 [colors-dark]
