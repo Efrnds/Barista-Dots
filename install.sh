@@ -29,8 +29,15 @@ fi
 # 2. Instalar todos os pacotes
 echo -e "${BLUE}[*] Lendo pacotes_instalados.txt e instalando...${RESET}"
 if [ -f "pacotes_instalados.txt" ]; then
-    # Usando o yay para instalar pacotes do repositório oficial e do AUR
-    yay -S --needed --noconfirm - < pacotes_instalados.txt
+    # Lendo linha por linha. Pula pacotes já instalados.
+    # Se algum pacote der erro (ex: pipewire conflitando), não trava a instalação inteira!
+    while read -r pkg; do
+        [ -z "$pkg" ] && continue
+        if ! pacman -Qi "$pkg" &> /dev/null; then
+            echo -e "${BLUE}[*] Instalando: $pkg ${RESET}"
+            yay -S --noconfirm "$pkg" || echo -e "${RED}[!] Erro ao instalar: $pkg (ignorando e continuando...)${RESET}"
+        fi
+    done < pacotes_instalados.txt
 else
     echo -e "${RED}[!] Arquivo pacotes_instalados.txt não encontrado!${RESET}"
 fi
