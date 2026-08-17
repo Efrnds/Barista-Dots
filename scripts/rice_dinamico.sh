@@ -58,13 +58,9 @@ pkill -USR2 waybar || pkill waybar ; waybar &
 
 # 4. Foot: O Foot tem suporte nativo para ler os arquivos do pywal (já criados em ~/.cache/wal/colors.ini)
 # Vamos apenas apontar o colors.ini do foot para lá
-ln -sf "$HOME/.cache/wal/colors.ini" "$HOME/.config/foot/colors.ini"
-# Ou se preferir gerar manualmente:
-killall -USR1 foot || true
-
 FOOT_COLORS="$HOME/.config/foot/colors.ini"
 cat <<EOF > "$FOOT_COLORS"
-[colors-dark]
+[colors]
 alpha=0.9
 background=${color0:1}
 foreground=${color7:1}
@@ -77,6 +73,7 @@ regular5=${color5:1}
 regular6=${color6:1}
 regular7=${color7:1}
 EOF
+killall -USR1 foot || true
 
 # Notifica
 if command -v notify-send >/dev/null 2>&1; then

@@ -81,7 +81,21 @@ cat <<EOF > "$ROFI_COLORS"
 }
 EOF
 
-ln -sf "$HOME/.cache/wal/colors.ini" "$HOME/.config/foot/colors.ini"
+FOOT_COLORS="$HOME/.config/foot/colors.ini"
+cat <<EOF > "$FOOT_COLORS"
+[colors]
+alpha=0.9
+background=${color0:1}
+foreground=${color7:1}
+regular0=${color0:1}
+regular1=${color1:1}
+regular2=${color2:1}
+regular3=${color3:1}
+regular4=${color4:1}
+regular5=${color5:1}
+regular6=${color6:1}
+regular7=${color7:1}
+EOF
 killall -USR1 foot || true
 
 if command -v notify-send >/dev/null 2>&1; then
