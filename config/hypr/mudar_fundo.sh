@@ -149,7 +149,7 @@ apply_wallpaper_file() {
         cp "$file_path" "$WALL_PATH"
         awww img "$WALL_PATH" --transition-type wipe --transition-angle 30 --transition-step 90
         # Se tivermos o gerador dinâmico, roda ele
-        if [ -x ~/dotfiles/scripts/rice_dinamico.sh ]; then
+        if [ -x ~/dotfiles/scripts/rice_dinamico.sh ] && [ ! -f ~/.config/hypr/theme_locked ]; then
             ~/dotfiles/scripts/rice_dinamico.sh "$WALL_PATH"
         fi
     fi
@@ -396,7 +396,7 @@ while [ $ATTEMPT -le $MAX_RETRIES ] && [ "$SUCCESS" = "false" ]; do
                 # Aplica no Hyprland usando o awww
                 awww img "$WALL_PATH" --transition-type wipe --transition-angle 30 --transition-step 90
         # Se tivermos o gerador dinâmico, roda ele
-        if [ -x ~/dotfiles/scripts/rice_dinamico.sh ]; then
+        if [ -x ~/dotfiles/scripts/rice_dinamico.sh ] && [ ! -f ~/.config/hypr/theme_locked ]; then
             ~/dotfiles/scripts/rice_dinamico.sh "$WALL_PATH"
         fi
                 

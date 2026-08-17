@@ -101,3 +101,4 @@ killall -USR1 foot || true
 if command -v notify-send >/dev/null 2>&1; then
     notify-send "Tema Dinâmico" "Tema atualizado para a cor $COLOR!"
 fi
+touch "$HOME/.config/hypr/theme_locked"

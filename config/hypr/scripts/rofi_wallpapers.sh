@@ -14,6 +14,7 @@ rofi_cmd() {
 
 # Opções do menu
 options="🎨 Color Picker (Criar tema a partir de uma cor)
+🔓 Destravar Tema (Sincronizar com o Wallpaper)
 🎲 Aleatório (Com cores do tema)
 🎲 Aleatório (Sem restrição de cor)
 ❤️ Curtir Wallpaper Atual (Salvar Local)
@@ -38,6 +39,12 @@ fi
 case "$choice" in
     "🎨 Color Picker (Criar tema a partir de uma cor)")
         ~/dotfiles/scripts/rice_color_picker.sh
+        ;;
+    "🔓 Destravar Tema (Sincronizar com o Wallpaper)")
+        rm -f ~/.config/hypr/theme_locked
+        if [ -f ~/.config/hypr/current_wallpaper.jpg ]; then
+            ~/dotfiles/scripts/rice_dinamico.sh ~/.config/hypr/current_wallpaper.jpg
+        fi
         ;;
     "🎲 Aleatório (Com cores do tema)")
         ~/.config/hypr/mudar_fundo.sh
