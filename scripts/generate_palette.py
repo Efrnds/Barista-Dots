@@ -16,17 +16,22 @@ r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 h, s, v = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
 
 # Garantir que a cor base tenha saturação e valor suficientes para gerar uma paleta visível
-s = max(0.4, s)
-v = max(0.5, v)
+# Não forçamos a saturação mínima se a cor escolhida for cinza puro ou quase cinza.
+# Em vez disso, apenas garantimos que não fique escuro demais para os textos, ou ajustamos as paletas relativas a ela.
+if s > 0.1:
+    s = max(0.3, s)
+v = max(0.3, v)
 
 def hsv2hex(h, s, v):
     r, g, b = colorsys.hsv_to_rgb(h, s, v)
     return "#{:02x}{:02x}{:02x}".format(int(r*255), int(g*255), int(b*255))
 
+text_s = min(s, 0.1)
+
 theme = {
     "special": {
         "background": hsv2hex(h, s, 0.08),
-        "foreground": hsv2hex(h, 0.1, 0.95),
+        "foreground": hsv2hex(h, text_s, 0.95),
         "cursor": hsv2hex(h, s, 0.8)
     },
     "colors": {
@@ -37,7 +42,7 @@ theme = {
         "color4": hsv2hex(h, s, 0.6),
         "color5": hsv2hex((h+0.05)%1.0, s, 0.7),
         "color6": hsv2hex((h-0.1)%1.0, s, 0.8),
-        "color7": hsv2hex(h, 0.1, 0.8),
+        "color7": hsv2hex(h, text_s, 0.8),
         "color8": hsv2hex(h, s, 0.3),
         "color9": hsv2hex(h, s, 0.9),
         "color10": hsv2hex((h+0.1)%1.0, s, 0.9),
@@ -45,7 +50,7 @@ theme = {
         "color12": hsv2hex(h, s, 0.7),
         "color13": hsv2hex((h+0.05)%1.0, s, 0.8),
         "color14": hsv2hex((h-0.1)%1.0, s, 0.9),
-        "color15": hsv2hex(h, 0.1, 0.95)
+        "color15": hsv2hex(h, text_s, 0.95)
     }
 }
 
