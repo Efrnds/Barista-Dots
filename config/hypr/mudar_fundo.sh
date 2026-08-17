@@ -90,6 +90,80 @@ like_current_wallpaper() {
 }
 
 # Sub-comando: Aplicar um wallpaper dos FAVORITOS locais
+# Helper para aplicar qualquer arquivo (imagem, gif, webp ou vídeo mp4/webm)
+apply_wallpaper_file() {
+    local file_path="$1"
+    local strategy="$2"
+    
+    if [ ! -f "$file_path" ]; then
+        echo "Erro: Arquivo não encontrado em $file_path"
+        exit 1
+    fi
+
+    local filename=$(basename "$file_path")
+    local file_id="${filename%.*}"
+    local ext="${filename##*.}"
+    ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+
+    if [ "$ext" = "mp4" ] || [ "$ext" = "webm" ]; then
+        # É um vídeo! (Wallpaper Dinâmico de Alta Qualidade)
+        
+        # 1. Para o mpvpaper atual se já estiver rodando
+        killall mpvpaper 2>/dev/null
+        
+        # 2. Inicia o mpvpaper em background tocando o vídeo em loop sem áudio em todas as telas
+        if command -v mpvpaper >/dev/null 2>&1; then
+            mpvpaper -o "no-audio loop" "*" "$file_path" &
+        else
+            echo "Aviso: mpvpaper não está instalado. Não foi possível rodar o vídeo."
+            if command -v notify-send >/dev/null 2>&1; then
+                notify-send -u critical "Erro de Vídeo" "Instale 'mpvpaper' para rodar wallpapers em vídeo."
+            fi
+            exit 1
+        fi
+        
+        # 3. Extrai o primeiro frame como JPG estático usando ffmpeg para o hyprlock/waybar
+        if command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -y -i "$file_path" -vframes 1 "$WALL_PATH" >/dev/null 2>&1
+        else
+            echo "Aviso: ffmpeg não está instalado. Não foi possível gerar fallback estático."
+        fi
+    elif [ "$ext" = "gif" ] || [ "$ext" = "webp" ]; then
+        # É uma animação (GIF ou WebP)!
+        
+        # 1. Garante que o mpvpaper pare para não sobrepor o awww
+        killall mpvpaper 2>/dev/null
+        
+        # 2. Aplica via awww
+        awww img "$file_path" --transition-type wipe --transition-angle 30 --transition-step 90
+        
+        # 3. Extrai o primeiro frame como JPG estático usando Python/Pillow
+        python -c "from PIL import Image; im = Image.open('$file_path'); im.seek(0); im.convert('RGB').save('$WALL_PATH', 'JPEG')" 2>/dev/null
+    else
+        # É um wallpaper estático convencional (jpg, png, svg)
+        
+        # 1. Garante que o mpvpaper pare para voltar o controle para o awww
+        killall mpvpaper 2>/dev/null
+        
+        # 2. Aplica via cp e awww
+        cp "$file_path" "$WALL_PATH"
+        awww img "$WALL_PATH" --transition-type wipe --transition-angle 30 --transition-step 90
+    fi
+
+    # Salva informações locais
+    echo "WALL_ID='local_${file_id}'" > "$INFO_FILE"
+    echo "WALL_RES='local'" >> "$INFO_FILE"
+    echo "WALL_URL=''" >> "$INFO_FILE"
+    echo "WALL_STRATEGY='${strategy}'" >> "$INFO_FILE"
+
+    echo "Wallpaper aplicado: $filename"
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "Papel de Parede Aplicado" "Arquivo: $filename"
+    fi
+    exit 0
+}
+
+# Sub-comando: Aplicar um wallpaper dos FAVORITOS locais
 apply_local_wallpaper() {
     if [ ! -d "$FAV_DIR" ] || [ -z "$(ls -A "$FAV_DIR" 2>/dev/null)" ]; then
         echo "Você ainda não curtiu nenhum wallpaper!"
@@ -99,36 +173,45 @@ apply_local_wallpaper() {
         exit 1
     fi
 
-    # Sorteia uma imagem na pasta de favoritos
-    local random_fav=$(find "$FAV_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" -o -name "*.svg" \) 2>/dev/null | shuf -n 1)
+    # Sorteia uma imagem/vídeo na pasta de favoritos (suportando imagens, gifs, webps e vídeos)
+    local random_fav=$(find "$FAV_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" -o -name "*.svg" -o -name "*.gif" -o -name "*.webp" -o -name "*.mp4" -o -name "*.webm" \) 2>/dev/null | shuf -n 1)
 
     if [ -z "$random_fav" ]; then
-        echo "Nenhum arquivo de imagem válido encontrado nos favoritos."
+        echo "Nenhum arquivo de imagem/vídeo válido encontrado nos favoritos."
         exit 1
     fi
 
-    local filename=$(basename "$random_fav")
-    local fav_id="${filename%.*}"
+    apply_wallpaper_file "$random_fav" "Local Favorito"
+}
 
-    # Aplica o wallpaper
-    cp "$random_fav" "$WALL_PATH"
-    awww img "$WALL_PATH" --transition-type wipe --transition-angle 30 --transition-step 90
+# Sub-comando: Aplicar um arquivo local específico (estático ou dinâmico)
+apply_specific_file() {
+    apply_wallpaper_file "$1" "Especificado Local"
+}
 
-    # Salva informações locais
-    echo "WALL_ID='local_${fav_id}'" > "$INFO_FILE"
-    echo "WALL_RES='local'" >> "$INFO_FILE"
-    echo "WALL_URL=''" >> "$INFO_FILE"
-    echo "WALL_STRATEGY='Local Favorito'" >> "$INFO_FILE"
-
-    echo "Wallpaper local aplicado: $filename"
-    if command -v notify-send >/dev/null 2>&1; then
-        notify-send "Papel de Parede Local" "Aplicado: $filename"
+# Sub-comando: Buscar e aplicar um live wallpaper (vídeo) automático do MotionBGs
+apply_live_wallpaper() {
+    local q="$1"
+    echo "Buscando live wallpaper animado na web (MotionBGs)..."
+    
+    # Roda o script python para obter e baixar o vídeo
+    local video_path
+    video_path=$(python "$WALL_DIR/scripts/fetch_live_wallpaper.py" "$q" 2>/dev/null)
+    
+    if [ -n "$video_path" ] && [ -f "$video_path" ]; then
+        apply_wallpaper_file "$video_path" "Live Wallpaper Automático"
+    else
+        echo "Erro: Não foi possível obter ou baixar o live wallpaper animado."
+        if command -v notify-send >/dev/null 2>&1; then
+            notify-send -u critical "Erro" "Falha ao buscar live wallpaper na web."
+        fi
+        exit 1
     fi
-    exit 0
 }
 
 # Parse de argumentos
 USE_COLORS=true
+LIVE_MODE=false
 QUERY=""
 
 for arg in "$@"; do
@@ -143,22 +226,37 @@ for arg in "$@"; do
         --local|-loc)
             apply_local_wallpaper
             ;;
+        --live|-live)
+            LIVE_MODE=true
+            shift
+            ;;
         --help|-h)
-            echo "Uso: $0 [opções] [tema]"
+            echo "Uso: $0 [opções] [tema/arquivo]"
             echo "Opções:"
             echo "  -nc, --nocolor    Ignora o filtro de cores (traz mais variedade)"
             echo "  -l, --like        Curte o wallpaper atual e o salva nos favoritos locais"
             echo "  -loc, --local     Aplica um wallpaper aleatório dos seus favoritos locais"
+            echo "  --live            Busca e aplica um wallpaper animado (vídeo) automaticamente da web"
             echo "  -h, --help        Mostra esta ajuda"
             echo "Temas comuns: cyberpunk, pixelart, space, minimalism, lofi, etc."
+            echo "Você também pode passar o caminho direto de um arquivo local (.jpg, .png, .gif, .webp, .mp4)."
             exit 0
             ;;
         *)
-            QUERY="$arg"
+            if [ -f "$arg" ]; then
+                apply_specific_file "$arg"
+            else
+                QUERY="$arg"
+            fi
             shift
             ;;
     esac
 done
+
+# Se o modo live estiver ativo, faz a busca
+if [ "$LIVE_MODE" = "true" ]; then
+    apply_live_wallpaper "$QUERY"
+fi
 
 # Se nenhum tema foi passado por argumento, escolhe um aleatório (ou local com chance de 15%)
 if [ -z "$QUERY" ]; then

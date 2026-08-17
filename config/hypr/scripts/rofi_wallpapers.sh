@@ -17,6 +17,7 @@ options="🎲 Aleatório (Com cores do tema)
 🎲 Aleatório (Sem restrição de cor)
 ❤️ Curtir Wallpaper Atual (Salvar Local)
 📁 Meus Favoritos Locais (Aleatório)
+🎬 Live Wallpaper Aleatório (Vídeo da Web)
 🌌 Cyberpunk
 👾 Pixel Art
 🏔️ Paisagem (Scenery)
@@ -45,6 +46,9 @@ case "$choice" in
         ;;
     "📁 Meus Favoritos Locais (Aleatório)")
         ~/.config/hypr/mudar_fundo.sh --local
+        ;;
+    "🎬 Live Wallpaper Aleatório (Vídeo da Web)")
+        ~/.config/hypr/mudar_fundo.sh --live
         ;;
     "🌌 Cyberpunk")
         ~/.config/hypr/mudar_fundo.sh cyberpunk

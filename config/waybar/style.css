@@ -67,7 +67,8 @@ window#waybar {
 #custom-notification,
 #custom-wallpaper,
 #custom-power,
-#mpris {
+#mpris,
+#tray{
     color: @text_color;
     padding: 0 8px;
     margin: 0 2px;
@@ -185,6 +186,15 @@ window#waybar {
 #custom-power:hover {
     color: #f5c2e7;
     background-color: rgba(237, 135, 150, 0.2);
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: #ed8796;
 }
 
 @keyframes blink {

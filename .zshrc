@@ -115,7 +115,7 @@ alias y='yazi'
 alias l='ls -lh'
 alias la='ls -la'
 alias c='clear'
-alias upgrade='sudo pacman -Syu && yay -Sua'
+alias upgrade='sudo pacman -Syu --overwrite "/usr/lib/node_modules/npm/*" && yay -Sua'
 alias configs='~/.config/hypr/scripts/edit_configs.sh'
 alias clean='~/.config/hypr/scripts/limpar_sistema.sh'
 alias ai-toggle='~/.config/hypr/scripts/toggle_ollama.sh'
@@ -151,3 +151,16 @@ font-install() {
     fc-cache -fv >/dev/null
     echo "Fonte instalada em ~/.local/share/fonts/ e cache atualizado! 🔤"
 }
+
+# bun completions
+[ -s "/home/eduardo/.bun/_bun" ] && source "/home/eduardo/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# --- Skyrim+ Lite ---
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+# Skyrim+ Lite / MO2
+alias mo2-skyrim='steam steam://rungameid/489830'
+alias skyrim-plus-dl='python3 ~/Games/SkyrimPlusLite/tools/download_nexus_mods.py'
