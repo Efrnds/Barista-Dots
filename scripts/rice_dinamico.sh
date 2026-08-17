@@ -81,3 +81,15 @@ if command -v notify-send >/dev/null 2>&1; then
     notify-send "Rice Dinâmico Aplicado" "Tema extraído de: $(basename "$WALLPAPER")"
 fi
 echo "✅ Tema dinâmico aplicado com sucesso!"
+
+# 5. Atualizando cores do Rofi
+ROFI_COLORS="$HOME/.config/rofi/colors.rasi"
+cat <<ROFIOF > "$ROFI_COLORS"
+* {
+    bg: #${color0:1}F2;
+    bg-alt: #${color4:1}26;
+    accent: ${color4};
+    fg: ${color7};
+    fg-alt: ${color5};
+}
+ROFIOF
