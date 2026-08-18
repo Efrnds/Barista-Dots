@@ -61,12 +61,12 @@ EOF
 
 WAYBAR_COLORS="$HOME/.config/waybar/colors.css"
 cat <<EOF > "$WAYBAR_COLORS"
-@define-color bg_color rgba(${color0:1}, 0.85);
-@define-color border_color rgba(${color4:1}, 0.25);
+@define-color bg_color alpha($color0, 0.85);
+@define-color border_color alpha($color4, 0.25);
 @define-color active_color $color4;
 @define-color text_color $color7;
 @define-color accent_color $color5;
-@define-color pill_bg rgba(${color4:1}, 0.12);
+@define-color pill_bg alpha($color4, 0.12);
 EOF
 pkill -USR2 waybar || pkill waybar ; waybar &
 
