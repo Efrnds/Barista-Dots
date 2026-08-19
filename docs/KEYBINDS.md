@@ -152,9 +152,15 @@ Prefixo padrão: **`Ctrl+b`**. Ajuda: `prefix + ?`.
 | `Ctrl+b` `|` | Split horizontal (cwd atual) |
 | `Ctrl+b` `-` | Split vertical (cwd atual) |
 | `Ctrl+b` `h/j/k/l` | Navegar panes (vim) |
-| `Ctrl+b` `r` | Recarregar `tmux.conf` |
+| `Ctrl+b` `z` | Zoom pane |
+| `Ctrl+b` `x` | Fechar pane (confirma) |
+| `Ctrl+b` `c` | Nova janela |
+| `Ctrl+b` `d` | Detach |
+| `Ctrl+b` `R` | Recarregar `tmux.conf` |
+| `Ctrl+b` `Ctrl+s` | Salvar sessão (resurrect) |
+| `Ctrl+b` `Ctrl+r` | Restaurar sessão (resurrect) |
 
-Mouse habilitado. Terminal: `foot` com RGB.
+Sessões Foot: `main`, `dev` (`foot-tmux-dev.sh`), `ssh` (`foot-tmux-ssh.sh`). Mouse habilitado. Status bar: workspace Hyprland + cwd.
 
 Para trocar prefixo para `Ctrl+a`, descomente as linhas em `config/tmux/tmux.conf`.
 
