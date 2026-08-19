@@ -1,17 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Bootstrap one-liner: clone + install
+set -euo pipefail
 
-echo "🚀 Iniciando a instalação do Setup..."
-echo "📦 Baixando o repositório..."
+REPO="${DOTFILES_REPO:-https://github.com/Efrnds/Barista-Dots.git}"
+TARGET="${DOTFILES_DIR:-$HOME/dotfiles}"
 
-# Garante que o git está instalado
-if ! command -v git &> /dev/null; then
-    sudo pacman -S --noconfirm git
+if ! command -v git >/dev/null 2>&1; then
+  sudo pacman -S --needed --noconfirm git
 fi
 
-# Clona o repositório para a home do usuário
-git clone https://github.com/Efrnds/Barista-Dots.git ~/dotfiles
-
-# Entra na pasta e roda o instalador principal
-cd ~/dotfiles
-chmod +x install.sh
-./install.sh
+if [[ -d "$TARGET/.git" ]]; then
+  echo "Repo já existe em $TARGET — rodando update..."
+  cd "$TARGET"
+  git pull --rebase --autostash
+  ./install.sh
+else
+  git clone "$REPO" "$TARGET"
+  cd "$TARGET"
+  chmod +x install.sh apply.sh import.sh update.sh
+  ./install.sh
+fi

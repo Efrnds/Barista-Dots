@@ -1,4 +1,8 @@
 #!/bin/bash
+LOG_DIR="$HOME/.cache"
+LOG_FILE="$LOG_DIR/mudar_fundo.log"
+mkdir -p "$LOG_DIR"
+printf '%s args=%q\n' "$(date -Iseconds)" "$*" >>"$LOG_FILE"
 
 # Define onde a imagem vai ser salva persistentemente
 WALL_DIR="$HOME/.config/hypr"
@@ -7,6 +11,19 @@ TEMP_PATH="/tmp/next_wallpaper.jpg"
 HISTORY_FILE="$HOME/.cache/mudar_fundo_history.txt"
 INFO_FILE="$HOME/.cache/current_wallpaper_info.txt"
 FAV_DIR="$HOME/Pictures/Wallpapers/Favoritos"
+
+# Aplica wallpaper e tema via DMS (matugen)
+apply_wallpaper_colors() {
+    local wall="$1"
+
+    if [ -f "$HOME/.config/hypr/theme_locked" ]; then
+        return 0
+    fi
+
+    if command -v dms >/dev/null 2>&1 && [ -f "$wall" ]; then
+        dms ipc call wallpaper set "$wall" >/dev/null 2>&1 || true
+    fi
+}
 
 # Cores dinâmicas baseadas no tema ativo do sistema (Lavender ou Catppuccin Macchiato)
 ACTIVE_THEME="lavender"
@@ -122,7 +139,7 @@ apply_wallpaper_file() {
             exit 1
         fi
         
-        # 3. Extrai o primeiro frame como JPG estático usando ffmpeg para o hyprlock/waybar
+        # 3. Extrai o primeiro frame como JPG estático usando ffmpeg para o hyprlock/eww
         if command -v ffmpeg >/dev/null 2>&1; then
             ffmpeg -y -i "$file_path" -vframes 1 "$WALL_PATH" >/dev/null 2>&1
         else
@@ -134,24 +151,20 @@ apply_wallpaper_file() {
         # 1. Garante que o mpvpaper pare para não sobrepor o awww
         killall mpvpaper 2>/dev/null
         
-        # 2. Aplica via awww
-        awww img "$file_path" --transition-type wipe --transition-angle 30 --transition-step 90
-        
-        # 3. Extrai o primeiro frame como JPG estático usando Python/Pillow
+        # 2. Extrai o primeiro frame como JPG estático e aplica via DMS
         python -c "from PIL import Image; im = Image.open('$file_path'); im.seek(0); im.convert('RGB').save('$WALL_PATH', 'JPEG')" 2>/dev/null
     else
         # É um wallpaper estático convencional (jpg, png, svg)
         
-        # 1. Garante que o mpvpaper pare para voltar o controle para o awww
+        # 1. Garante que o mpvpaper pare
         killall mpvpaper 2>/dev/null
         
-        # 2. Aplica via cp e awww
+        # 2. Copia e aplica via DMS
         cp "$file_path" "$WALL_PATH"
-        awww img "$WALL_PATH" --transition-type wipe --transition-angle 30 --transition-step 90
-        # Se tivermos o gerador dinâmico, roda ele
-        if [ -x ~/dotfiles/scripts/rice_dinamico.sh ] && [ ! -f ~/.config/hypr/theme_locked ]; then
-            ~/dotfiles/scripts/rice_dinamico.sh "$WALL_PATH"
-        fi
+    fi
+
+    if [ -f "$WALL_PATH" ]; then
+        apply_wallpaper_colors "$WALL_PATH"
     fi
 
     # Salva informações locais
@@ -392,13 +405,7 @@ while [ $ATTEMPT -le $MAX_RETRIES ] && [ "$SUCCESS" = "false" ]; do
             # Tenta baixar a imagem
             if wget -qO "$TEMP_PATH" "$WALL_URL"; then
                 cp "$TEMP_PATH" "$WALL_PATH"
-                
-                # Aplica no Hyprland usando o awww
-                awww img "$WALL_PATH" --transition-type wipe --transition-angle 30 --transition-step 90
-        # Se tivermos o gerador dinâmico, roda ele
-        if [ -x ~/dotfiles/scripts/rice_dinamico.sh ] && [ ! -f ~/.config/hypr/theme_locked ]; then
-            ~/dotfiles/scripts/rice_dinamico.sh "$WALL_PATH"
-        fi
+                apply_wallpaper_colors "$WALL_PATH"
                 
                 # Salva informações do wallpaper atual para poder curtir depois
                 echo "WALL_ID='$WALL_ID'" > "$INFO_FILE"

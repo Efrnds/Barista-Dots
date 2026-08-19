@@ -1,0 +1,26 @@
+# Backups locais / lixo
+*.bak
+*.bak.*
+.DS_Store
+
+# Hypr — mídia grande (não versionar)
+config/hypr/current_wallpaper.jpg
+config/hypr/current_wallpaper.mp4
+config/hypr/current_wallpaper.webp
+config/hypr/avatar.jpg
+config/hypr/.dms-backups/
+
+# DMS — estado local da primeira execução
+config/DankMaterialShell/.firstlaunch
+config/DankMaterialShell/.changelog-*
+
+# Secrets (nunca commitar)
+config/hypr/rdp-server.conf
+**/secrets*
+**/*.secret
+**/.env
+
+# Caches / locks
+**/__pycache__/
+**/.venv/
+**/node_modules/

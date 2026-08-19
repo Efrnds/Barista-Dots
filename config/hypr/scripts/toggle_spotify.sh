@@ -1,7 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+SPECIAL="spotify"
+
 if ! pgrep -xi "spotify" > /dev/null; then
     spotify &
-    # Aguarda um pequeno momento para o processo iniciar
-    sleep 0.2
+    # Aguarda o processo iniciar e a window rule mover pro scratchpad
+    sleep 0.5
 fi
-hyprctl dispatch togglespecialworkspace spotify
+
+# Hyprland 0.56+ (config Lua): syntax antiga "togglespecialworkspace" não funciona mais
+hyprctl dispatch 'hl.dsp.workspace.toggle_special("spotify")'

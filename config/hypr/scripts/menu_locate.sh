@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Busca rápida de arquivos no Home usando fd + Rofi
+# Busca rápida de arquivos no Home usando fd + EWW picker
+
+PICKER="$HOME/.config/hypr/scripts/picker.sh"
 
 CHOSEN=$(fd --hidden --exclude .git --exclude node_modules --exclude .cache --type f . "$HOME" | \
-    rofi -dmenu -p "🔍 Buscar arquivo" -i -theme-str "window {width: 50%;} listview {lines: 12;}")
+    "$PICKER" -p "🔍 Buscar arquivo")
 
 if [ -n "$CHOSEN" ]; then
     xdg-open "$CHOSEN" &

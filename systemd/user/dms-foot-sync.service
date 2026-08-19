@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync Foot colors from DMS palette
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/hypr/scripts/sync-foot-theme-dms.sh

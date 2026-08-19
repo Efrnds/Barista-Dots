@@ -1,0 +1,7 @@
+[user]
+	name = Eduardo fernandes da silva
+	email = eduardo.fernandes.silva13@gmail.com
+[http]
+	sslVerify = false
+[credential]
+	helper = cache

@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+SPECIAL="superproductivity"
 
 # Detecta qual executável está disponível no sistema
 if command -v superproductivity >/dev/null 2>&1; then
@@ -6,15 +9,12 @@ if command -v superproductivity >/dev/null 2>&1; then
 elif command -v super-productivity >/dev/null 2>&1; then
     CMD="super-productivity"
 else
-    CMD="superproductivity" # fallback padrão
+    CMD="superproductivity"
 fi
 
-# Verifica se o processo já está rodando
 if ! pgrep -xi "superproductiv" > /dev/null && ! pgrep -xi "super-productiv" > /dev/null; then
-    $CMD &
-    # Aguarda o processo iniciar antes de alternar o workspace especial
+    "$CMD" &
     sleep 0.5
 fi
 
-# Alterna para a área de trabalho especial (scratchpad) do superproductivity
-hyprctl dispatch togglespecialworkspace superproductivity
+hyprctl dispatch 'hl.dsp.workspace.toggle_special("superproductivity")'

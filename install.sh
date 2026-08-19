@@ -1,84 +1,76 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Instalação completa em máquina nova (Arch + dotfiles).
+set -euo pipefail
 
-# Cores para deixar bonito
-GREEN="\e[32m"
-RED="\e[31m"
-BLUE="\e[34m"
-RESET="\e[0m"
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GREEN='\033[32m'
+RED='\033[31m'
+BLUE='\033[34m'
+RESET='\033[0m'
 
-echo -e "${BLUE}=== Bem-vindo ao instalador do meu setup Linux! ===${RESET}"
+echo -e "${BLUE}=== Barista Dots — install ===${RESET}"
 
-# Verifica se está rodando como root (yay não permite root)
-if [ "$EUID" -eq 0 ]; then
-  echo -e "${RED}[!] Por favor, não rode este script como root. Rode normalmente e ele pedirá a senha do sudo quando precisar.${RESET}"
+if [[ "$EUID" -eq 0 ]]; then
+  echo -e "${RED}[!] Não rode como root.${RESET}"
   exit 1
 fi
 
-# 1. Garantir que temos o yay (AUR helper)
-if ! command -v yay &> /dev/null; then
-  echo -e "${BLUE}[*] Instalando dependências básicas e o yay...${RESET}"
+# yay
+if ! command -v yay >/dev/null 2>&1; then
+  echo -e "${BLUE}[*] Instalando yay...${RESET}"
   sudo pacman -S --needed --noconfirm git base-devel
-  git clone https://aur.archlinux.org/yay.git /tmp/yay
-  cd /tmp/yay
-  makepkg -si --noconfirm
-  cd -
+  git clone https://aur.archlinux.org/yay.git /tmp/yay-build
+  (cd /tmp/yay-build && makepkg -si --noconfirm)
 else
-  echo -e "${GREEN}[v] yay já está instalado.${RESET}"
+  echo -e "${GREEN}[v] yay ok${RESET}"
 fi
 
-# 2. Instalar todos os pacotes
-echo -e "${BLUE}[*] Lendo pacotes_instalados.txt e instalando...${RESET}"
-if [ -f "pacotes_instalados.txt" ]; then
-    # Lendo linha por linha. Pula pacotes já instalados.
-    # Se algum pacote der erro (ex: pipewire conflitando), não trava a instalação inteira!
-    while read -r pkg; do
-        [ -z "$pkg" ] && continue
-        if ! pacman -Qi "$pkg" &> /dev/null; then
-            echo -e "${BLUE}[*] Instalando: $pkg ${RESET}"
-            yay -S --noconfirm "$pkg" || echo -e "${RED}[!] Erro ao instalar: $pkg (ignorando e continuando...)${RESET}"
-        fi
-    done < pacotes_instalados.txt
-else
-    echo -e "${RED}[!] Arquivo pacotes_instalados.txt não encontrado!${RESET}"
+# Pacotes essenciais primeiro (stack atual: Hyprland + DMS)
+ESSENTIAL=(
+  hyprland hypridle hyprlock hyprpolkitagent
+  dms-shell foot tmux fuzzel
+  pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber
+  networkmanager bluez bluez-utils
+  grim slurp wl-clipboard cliphist
+  starship fastfetch btop cava yazi neovim
+  noto-fonts noto-fonts-emoji ttf-jetbrains-mono-nerd
+  catppuccin-gtk-theme-macchiato catppuccin-cursors-macchiato
+  ly udiskie jq ripgrep fd
+)
+
+echo -e "${BLUE}[*] Pacotes essenciais...${RESET}"
+for pkg in "${ESSENTIAL[@]}"; do
+  if ! pacman -Qi "$pkg" &>/dev/null; then
+    yay -S --needed --noconfirm "$pkg" || echo -e "${RED}[!] falhou: $pkg${RESET}"
+  fi
+done
+
+# Restante do packages.txt (opcional, ignora erros)
+if [[ -f "$DOTFILES/packages.txt" ]]; then
+  echo -e "${BLUE}[*] Pacotes de packages.txt...${RESET}"
+  while read -r pkg; do
+    [[ -z "$pkg" ]] && continue
+    pacman -Qi "$pkg" &>/dev/null && continue
+    yay -S --needed --noconfirm "$pkg" || echo -e "${RED}[!] falhou: $pkg${RESET}"
+  done < "$DOTFILES/packages.txt"
 fi
 
-# 3. Restaurar as configurações (dotfiles)
-echo -e "${BLUE}[*] Restaurando as configurações da pasta .config e arquivos da Home...${RESET}"
-mkdir -p ~/.config
+# Aplicar dotfiles (symlinks)
+"$DOTFILES/apply.sh"
 
-# Copia tudo que está dentro da pasta config do repositório para o ~/.config do usuário
-cp -r ./config/* ~/.config/ 2>/dev/null || true
+# Serviços de sistema
+echo -e "${BLUE}[*] Serviços systemd (system)...${RESET}"
+for svc in NetworkManager bluetooth ly docker cronie tlp ufw cups; do
+  sudo systemctl enable "$svc" 2>/dev/null || true
+done
 
-# Copia arquivos avulsos para a home
-cp .zshrc .bashrc .gitconfig ~/ 2>/dev/null || true
-echo -e "${GREEN}[v] Configurações copiadas com sucesso!${RESET}"
-
-# 4. Permissões e scripts extras
-echo -e "${BLUE}[*] Preparando scripts adicionais...${RESET}"
-if [ -d "scripts" ]; then
-    chmod +x ./scripts/*.sh
-    echo -e "${GREEN}[v] Scripts em ./scripts estão prontos para uso.${RESET}"
-    
-    # Se você quiser que o script já rode os outros automaticamente, pode descomentar as linhas abaixo:
-    # ./scripts/install_zsh_omz.sh
-    # ./scripts/install_rofi_plugins.sh
+# Shell padrão
+if command -v zsh >/dev/null 2>&1; then
+  if [[ "${SHELL:-}" != "$(command -v zsh)" ]]; then
+    echo -e "${BLUE}[*] Definindo zsh como shell padrão...${RESET}"
+    sudo chsh -s "$(command -v zsh)" "$USER" || true
+  fi
 fi
 
-# 6. Ativar serviços (Systemd)
-echo -e "${BLUE}[*] Ativando serviços do sistema (Login, Internet, Bluetooth, Docker, etc)...${RESET}"
-sudo systemctl enable NetworkManager
-sudo systemctl enable bluetooth
-sudo systemctl enable ly
-sudo systemctl enable docker
-sudo systemctl enable cronie
-sudo systemctl enable tlp
-sudo systemctl enable ufw
-sudo systemctl enable cups
-
-echo -e "${BLUE}[*] Configurando o ZSH como shell padrão...${RESET}"
-if command -v zsh &> /dev/null; then
-    sudo chsh -s $(which zsh) $USER
-fi
-
-echo -e "${GREEN}=== Instalação finalizada com sucesso! ===${RESET}"
-echo -e "Recomendo reiniciar o sistema para que todas as alterações (como troca de shell e serviços) façam efeito."
+echo -e "${GREEN}=== Instalação concluída ===${RESET}"
+echo "Reinicie a sessão. Depois de git pull use: ~/dotfiles/update.sh"
