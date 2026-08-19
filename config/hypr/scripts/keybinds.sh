@@ -1,41 +1,82 @@
-#!/bin/bash
-
-# Lista atalhos de teclado do Hyprland via EWW picker (somente leitura)
+#!/usr/bin/env bash
+# Cheat-sheet de atalhos — Hyprland (hyprctl) + tmux. Super+Shift+/ abre painel DMS.
+set -euo pipefail
 
 PICKER="$HOME/.config/hypr/scripts/picker.sh"
-CONFIG_FILE="$HOME/.config/hypr/hyprland.conf"
+DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
-if [ ! -f "$CONFIG_FILE" ]; then
-    notify-send "Cheat-sheet" "Arquivo hyprland.conf não encontrado."
-    exit 1
+build_hypr_list() {
+  hyprctl binds -j 2>/dev/null | python3 -c "
+import json, sys
+
+MODS = [
+    (64, 'Super'),
+    (32, 'Hyper'),
+    (16, 'Mod5'),
+    (8, 'Alt'),
+    (4, 'Ctrl'),
+    (2, 'Mod3'),
+    (1, 'Shift'),
+]
+
+def mod_str(mask):
+    if mask == 0:
+        return ''
+    parts = [name for bit, name in MODS if mask & bit]
+    return ' + '.join(parts)
+
+lines = []
+for b in json.load(sys.stdin):
+    if b.get('locked') or b.get('mouse'):
+        continue
+    key = b.get('key') or ''
+    if not key or key.startswith('switch:'):
+        continue
+    mods = mod_str(b.get('modmask', 0))
+    desc = (b.get('description') or '').strip()
+    disp = b.get('dispatcher') or ''
+    arg = str(b.get('arg') or '')
+    if desc:
+        action = desc
+    elif disp == '__lua':
+        action = 'lua bind'
+    elif disp:
+        action = f'{disp} {arg}'.strip()
+    else:
+        action = 'bind'
+    label = f'{mods} + {key}'.strip(' +')
+    lines.append(f'Hypr  {label}  ->  {action}')
+
+for line in sorted(set(lines), key=str.lower):
+    print(line)
+" 2>/dev/null || true
+}
+
+build_tmux_list() {
+  cat <<'EOF'
+tmux  Ctrl+b + ?       ->  ajuda
+tmux  Ctrl+b + |       ->  split horizontal
+tmux  Ctrl+b + -       ->  split vertical
+tmux  Ctrl+b + h/j/k/l  ->  navegar panes
+tmux  Ctrl+b + z       ->  zoom pane
+tmux  Ctrl+b + x       ->  fechar pane
+tmux  Ctrl+b + c       ->  nova janela
+tmux  Ctrl+b + d       ->  detach
+tmux  Ctrl+b + r       ->  reload config
+tmux  Ctrl+b + S       ->  salvar sessão (resurrect)
+tmux  Ctrl+b + R       ->  restaurar sessão (resurrect)
+EOF
+}
+
+LISTA="$(build_hypr_list; build_tmux_list)"
+
+if [[ -z "$LISTA" ]]; then
+  if [[ -f "$DOTFILES/docs/KEYBINDS.md" ]]; then
+    foot -e "${EDITOR:-less}" "$DOTFILES/docs/KEYBINDS.md"
+  else
+    notify-send "Atalhos" "hyprctl indisponível — abra docs/KEYBINDS.md"
+  fi
+  exit 0
 fi
 
-LISTA=$(grep -E "^bind[a-z]*\s*=" "$CONFIG_FILE" | while read -r line; do
-    clean_line=$(echo "$line" | sed -E 's/^bind[a-z]*\s*=\s*//')
-
-    mod=$(echo "$clean_line" | cut -d',' -f1 | sed 's/ //g')
-    key=$(echo "$clean_line" | cut -d',' -f2 | sed 's/ //g')
-    action=$(echo "$clean_line" | cut -d',' -f3- | sed 's/^ //')
-
-    mod=$(echo "$mod" | sed 's/\$mainMod/Super/g' | sed 's/SHIFT/Shift/g' | sed 's/ALT/Alt/g' | sed 's/CTRL/Ctrl/g')
-    action=$(echo "$action" | sed 's/exec,//g' | sed 's/,\s*#\s*/ ➔ /' | sed 's/^ //')
-
-    if [[ "$action" == *#* ]]; then
-        comentario=$(echo "$action" | cut -d'#' -f2- | sed 's/^ //')
-        acao_limpa=$(echo "$action" | cut -d'#' -f1 | sed 's/ $//')
-        echo "⌨️  $mod + $key  ➔  $comentario ($acao_limpa)"
-    else
-        action_pt=$action
-        action_pt=$(echo "$action_pt" | sed \
-            -e 's/killactive/Fechar Janela/g' \
-            -e 's/togglefloating/Alternar Flutuante/g' \
-            -e 's/fullscreen 1/Tela Cheia Inteligente/g' \
-            -e 's/fullscreen 0/Tela Cheia Real/g' \
-            -e 's/movetoworkspace/Mover para Área:/g' \
-            -e 's/workspace/Mover para Workspace:/g' \
-            -e 's/movefocus/Focar Janela:/g')
-        echo "⌨️  $mod + $key  ➔  $action_pt"
-    fi
-done | sort -u)
-
-echo -e "$LISTA" | "$PICKER" -p "📋 Atalhos de Teclado (Super + F1)" >/dev/null
+echo "$LISTA" | "$PICKER" -p "Atalhos (Hypr + tmux)" >/dev/null || true

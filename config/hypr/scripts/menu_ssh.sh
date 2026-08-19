@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Gerenciador de conexões SSH via EWW picker (lê de ~/.ssh/config)
+# Gerenciador de conexões SSH (lê ~/.ssh/config)
 
 PICKER="$HOME/.config/hypr/scripts/picker.sh"
 SSH_CONFIG="$HOME/.ssh/config"
-LOG="${XDG_CACHE_HOME:-$HOME/.cache}/eww/ssh-menu.log"
+LOG="${XDG_CACHE_HOME:-$HOME/.cache}/hypr/ssh-menu.log"
 
 log() {
     mkdir -p "$(dirname "$LOG")"

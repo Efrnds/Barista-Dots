@@ -23,7 +23,7 @@ hl.unbind("SUPER + SHIFT + E")
 hl.unbind("SUPER + I")
 hl.unbind("SUPER + comma")
 hl.unbind("SUPER + Y")
-hl.unbind("SUPER + SHIFT + Slash")
+-- SUPER+SHIFT+Slash: painel DMS de keybinds (mantido)
 
 -- Shell / DMS panels (mapped from old iNiR binds)
 hl.bind("SUPER + Escape", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
@@ -32,6 +32,7 @@ hl.bind("SUPER + ALT + V", hl.dsp.exec_cmd("dms ipc call control-center toggle")
 hl.bind("SUPER + ALT + D", hl.dsp.exec_cmd("dms ipc call dash toggle"))
 hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("dms ipc call hypr toggleBinds"))
 hl.bind("SUPER + SHIFT + P", hl.dsp.exec_cmd("dms ipc call settings toggle"))
+hl.bind("SUPER + SHIFT + Slash", hl.dsp.exec_cmd("dms ipc call keybinds toggle hyprland"))
 
 -- Apps
 hl.bind("SUPER + T", hl.dsp.exec_cmd(terminal))

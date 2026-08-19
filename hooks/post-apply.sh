@@ -21,6 +21,11 @@ if command -v systemctl >/dev/null 2>&1; then
   systemctl --user restart dms-foot-sync.path 2>/dev/null || true
 fi
 
+echo "[post-apply] tmux plugin..."
+if [[ -x "$ROOT/hooks/setup-tmux.sh" ]]; then
+  "$ROOT/hooks/setup-tmux.sh" 2>/dev/null || true
+fi
+
 echo "[post-apply] sync foot <- DMS (se existir)..."
 if [[ -x "$HOME/.config/hypr/scripts/sync-foot-theme-dms.sh" ]]; then
   "$HOME/.config/hypr/scripts/sync-foot-theme-dms.sh" 2>/dev/null || true

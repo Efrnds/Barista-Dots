@@ -17,6 +17,7 @@ config/DankMaterialShell/.changelog-*
 # Dotfiles — configs gerados (use templates/)
 config/foot/foot.ini
 config/spicetify/config-xpui.ini
+config/tmux/plugins/
 
 # User-local (não versionar)
 **/.config/dotfiles/user.conf

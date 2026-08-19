@@ -58,8 +58,10 @@ if pacman -Qi ly &>/dev/null; then
   else
     warn "ly@tty1.service não enabled — rode hooks/setup-session.sh"
   fi
-  if [[ -f /etc/ly/config.ini ]] && grep -q 'full_color = true' /etc/ly/config.ini; then
-    pass "Ly full_color=true"
+  if [[ -f /etc/ly/config.ini ]] && grep -qE '^full_color\s*=\s*true' /etc/ly/config.ini; then
+    pass "Ly full_color=true (/etc/ly)"
+  elif [[ -f "$DOTFILES/etc/ly/config.ini" ]] && grep -qE '^full_color\s*=\s*true' "$DOTFILES/etc/ly/config.ini"; then
+    warn "Ly /etc desatualizado — rode: ~/dotfiles/hooks/setup-session.sh"
   else
     warn "Ly full_color pode estar off (tela preta)"
   fi

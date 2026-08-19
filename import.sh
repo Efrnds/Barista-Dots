@@ -46,7 +46,7 @@ for unit in dms-foot-sync.path dms-foot-sync.service; do
 done
 
 mkdir -p "$DOTFILES/local-bin"
-for bin in foot-tmux.sh sync-foot-theme-dms.sh; do
+for bin in foot-tmux.sh foot-tmux-dev.sh foot-tmux-ssh.sh sync-foot-theme-dms.sh; do
   src="$HOME/.local/bin/$bin"
   [[ -f "$src" ]] && cp -a "$src" "$DOTFILES/local-bin/$bin"
   src="$HOME/.config/hypr/scripts/$bin"

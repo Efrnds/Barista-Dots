@@ -57,7 +57,7 @@ Atalhos do stack **Hyprland 0.56 + DMS**, com overrides em `config/hypr/dms/bind
 | Atalho | Ação |
 |--------|------|
 | `Super+.` | Emoji picker |
-| `Super+F1` | Lista de keybinds |
+| `Super+F1` | Cheat-sheet Hypr + tmux (picker) |
 | `Super+S` | Localizar arquivo |
 | `Super+G` | Menu apps |
 | `Super+Shift+E` | Editar configs |
@@ -139,7 +139,7 @@ Estes vêm de `binds.lua` e **não** foram substituídos em `binds-user.lua`:
 | `XF86Audio*` | Volume / mute / mídia (DMS) |
 | `XF86MonBrightness*` | Brilho (DMS) |
 
-Cheat sheet DMS: `Super+Shift+/` (default DMS; unbound em user — use `Super+F1`).
+| `Super+Shift+/` | Painel DMS de keybinds |
 
 ---
 
