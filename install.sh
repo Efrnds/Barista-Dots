@@ -28,7 +28,7 @@ fi
 # Pacotes essenciais primeiro (stack atual: Hyprland + DMS)
 ESSENTIAL=(
   hyprland hypridle hyprlock hyprpolkitagent
-  dms-shell foot tmux fuzzel
+  dms-shell dms-shell-hyprland foot tmux fuzzel zsh
   pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber
   networkmanager bluez bluez-utils
   grim slurp wl-clipboard cliphist
@@ -68,13 +68,19 @@ for svc in NetworkManager bluetooth docker cronie tlp ufw cups; do
   sudo -A systemctl enable "$svc" 2>/dev/null || true
 done
 
-# Shell padrão
+# Shell padrão (só se zsh existir — evita "failed to initialize user" no Ly)
 if command -v zsh >/dev/null 2>&1; then
-  if [[ "${SHELL:-}" != "$(command -v zsh)" ]]; then
+  CURRENT_SHELL="$(getent passwd "$USER" | cut -d: -f7)"
+  ZSH_PATH="$(command -v zsh)"
+  if [[ "$CURRENT_SHELL" != "$ZSH_PATH" && -x "$ZSH_PATH" ]]; then
     echo -e "${BLUE}[*] Definindo zsh como shell padrão...${RESET}"
-    sudo chsh -s "$(command -v zsh)" "$USER" || true
+    sudo -A chsh -s "$ZSH_PATH" "$USER" || true
   fi
+else
+  echo -e "${RED}[!] zsh não instalado — mantendo shell atual (importante pro Ly)${RESET}"
 fi
+
+"$DOTFILES/hooks/validate-login.sh" || true
 
 echo -e "${GREEN}=== Instalação concluída ===${RESET}"
 echo "Reinicie a sessão. Depois de git pull use: ~/dotfiles/update.sh"

@@ -24,6 +24,6 @@ if [ -n "$CHOSEN" ]; then
   if [ "$FILE" = "/etc/ly/config.ini" ]; then
     foot -e sudo nvim "$FILE"
   else
-    /home/eduardo/Applications/cursor.AppImage "$FILE" &
+    "${HOME}/Applications/cursor.AppImage" "$FILE" &
   fi
 fi

@@ -22,6 +22,12 @@ deploy_ly_config() {
   echo "[session] deploy /etc/ly/config.ini"
   need_sudo mkdir -p /etc/ly
   need_sudo cp -a "$src" /etc/ly/config.ini
+
+  if [[ -d "$ROOT/etc/ly/custom-sessions" ]]; then
+    echo "[session] deploy /etc/ly/custom-sessions/"
+    need_sudo mkdir -p /etc/ly/custom-sessions
+    need_sudo cp -a "$ROOT/etc/ly/custom-sessions/." /etc/ly/custom-sessions/
+  fi
 }
 
 enable_ly() {
@@ -32,10 +38,15 @@ enable_ly() {
 
   deploy_ly_config
 
+  echo "[session] validate login prerequisites..."
+  "$ROOT/hooks/validate-login.sh" || true
+
   local unit="ly@${LY_TTY}.service"
   echo "[session] enable $unit"
-  need_sudo systemctl disable "getty@${LY_TTY}.service" 2>/dev/null || true
+  # NÃO desabilitar getty manualmente — se o ly falhar, tty fica preto sem login.
+  # O ly@.service já faz Conflicts=getty@tty quando ativo.
   need_sudo systemctl enable "$unit"
+  need_sudo systemctl enable "getty@${LY_TTY}.service" 2>/dev/null || true
   need_sudo systemctl set-default graphical.target 2>/dev/null || true
 
   # ly 1.x não usa display-manager.service; desabilita outros DMs se existirem

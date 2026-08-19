@@ -1,5 +1,10 @@
 -- Custom window rules migrated from previous hyprland.conf
 
+-- Browser: evita dezenas de janelas minúsculas no dwindle ao apertar Super+B várias vezes
+hl.window_rule({ match = { class = "^(zen)$" }, tile = false })
+hl.window_rule({ match = { class = "^(zen)$" }, size = "85% 85%" })
+hl.window_rule({ match = { class = "^(zen)$" }, center = true })
+
 hl.window_rule({ match = { class = "^(pavucontrol)$" }, float = true })
 hl.window_rule({ match = { class = "^(blueman-manager)$" }, float = true })
 hl.window_rule({ match = { class = "^(nm-connection-editor)$" }, float = true })

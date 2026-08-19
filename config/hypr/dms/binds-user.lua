@@ -1,9 +1,11 @@
 -- User keybind overrides (loaded after DMS defaults)
 
-local editor = "/home/eduardo/Applications/cursor.AppImage"
-local browser = "zen-browser"
-local fileManager = "foot -e yazi"
-local terminal = "foot"
+local home = os.getenv("HOME") or ("/home/" .. (os.getenv("USER") or ""))
+local scripts = home .. "/.config/hypr/scripts"
+local editor = scripts .. "/launch_cursor.sh"
+local browser = scripts .. "/toggle_zen_browser.sh"
+local fileManager = "/usr/bin/foot -e yazi"
+local terminal = scripts .. "/launch_terminal.sh"
 
 -- Unbind DMS defaults that conflict with existing workflow
 hl.unbind("SUPER + T")
@@ -55,7 +57,7 @@ hl.bind("SUPER + ALT + Y", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_vpn.sh")
 hl.bind("SUPER + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_network_info.sh"))
 hl.bind("SUPER + ALT + U", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_audio.sh"))
 hl.bind("SUPER + ALT + S", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_ssh.sh"))
-hl.bind("SUPER + R", hl.dsp.exec_cmd("bash /home/eduardo/.config/hypr/scripts/rdp-server.sh"))
+hl.bind("SUPER + R", hl.dsp.exec_cmd("bash " .. home .. "/.config/hypr/scripts/rdp-server.sh"))
 
 -- Scratchpads / toggles
 hl.bind("SUPER + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/toggle_spotify.sh"))

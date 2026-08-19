@@ -4,6 +4,12 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+echo "[post-apply] foot.ini paths..."
+FOOT_INI="$(readlink -f "$HOME/.config/foot/foot.ini" 2>/dev/null || echo "$HOME/.config/foot/foot.ini")"
+if [[ -f "$FOOT_INI" ]]; then
+  sed -i "s|@HOME@|$HOME|g" "$FOOT_INI"
+fi
+
 echo "[post-apply] chmod em scripts hypr..."
 find "$HOME/.config/hypr/scripts" -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod +x {} + 2>/dev/null || true
 chmod +x "$HOME/.config/hypr/mudar_fundo.sh" 2>/dev/null || true

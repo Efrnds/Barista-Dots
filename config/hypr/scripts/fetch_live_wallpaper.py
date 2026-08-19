@@ -119,7 +119,7 @@ def main():
         print("1080p version not found, downloading standard version.", file=sys.stderr)
 
     # 4. Download the video file
-    dest_dir = "/home/eduardo/.config/hypr"
+    dest_dir = os.path.join(os.environ.get("HOME", ""), ".config", "hypr")
     dest_path = os.path.join(dest_dir, "current_wallpaper.mp4")
     
     print(f"Downloading video from {download_url}...", file=sys.stderr)

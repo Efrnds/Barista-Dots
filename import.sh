@@ -67,6 +67,10 @@ if [[ -r /etc/ly/config.ini ]]; then
   cp -a /etc/ly/config.ini "$DOTFILES/etc/ly/config.ini"
   echo -e "${GREEN}[import]${RESET} /etc/ly/config.ini"
 fi
+if [[ -d /etc/ly/custom-sessions ]]; then
+  mkdir -p "$DOTFILES/etc/ly/custom-sessions"
+  cp -a /etc/ly/custom-sessions/. "$DOTFILES/etc/ly/custom-sessions/" 2>/dev/null || true
+fi
 
 # Atualiza lista de pacotes instalados (pacman + AUR via pacman -Q)
 if command -v pacman >/dev/null 2>&1; then

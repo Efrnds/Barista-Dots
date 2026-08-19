@@ -97,6 +97,27 @@ LY_TTY=tty1
 
 Seu `/etc/ly/config.ini` customizado fica versionado em `etc/ly/config.ini` e é reaplicado no setup.
 
+### Ly na outra máquina — "failed to initialize user"
+
+Causas comuns e o que o repo corrige:
+
+1. **Shell inválido** — `install.sh` instala `zsh` antes do `chsh`; `hooks/validate-login.sh` corrige se `/etc/passwd` apontar pra shell inexistente.
+2. **Ly rodando `/usr/bin/Hyprland` em vez da sessão** — bug conhecido quando o `.desktop` se chama `Hyprland`. Fix: Ly só lista `/etc/ly/custom-sessions/` com sessão **`Hyprland (DMS)`** (`start-hyprland`).
+3. **Não use** `Hyprland (uwsm-managed)` nem `shell` no Ly — escondidos na config.
+
+Na outra máquina, depois do pull:
+```bash
+~/dotfiles/update.sh
+# no Ly, escolha sessão: Hyprland (DMS)
+```
+
+Se ainda falhar, no TTY (Ctrl+Alt+F2):
+```bash
+getent passwd $USER    # shell existe?
+/usr/bin/start-hyprland   # hyprland sobe?
+sudo tail -30 /var/log/ly.log
+```
+
 - `chmod +x` nos scripts hypr
 - `systemctl --user enable` units (ex: sync Foot ↔ DMS)
 - `hyprctl reload` se sessão Wayland ativa
