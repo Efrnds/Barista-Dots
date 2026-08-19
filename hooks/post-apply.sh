@@ -4,16 +4,11 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-echo "[post-apply] foot.ini paths..."
-FOOT_INI="$(readlink -f "$HOME/.config/foot/foot.ini" 2>/dev/null || echo "$HOME/.config/foot/foot.ini")"
-if [[ -f "$FOOT_INI" ]]; then
-  sed -i "s|@HOME@|$HOME|g" "$FOOT_INI"
-fi
-
 echo "[post-apply] chmod em scripts hypr..."
 find "$HOME/.config/hypr/scripts" -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod +x {} + 2>/dev/null || true
 chmod +x "$HOME/.config/hypr/mudar_fundo.sh" 2>/dev/null || true
 chmod +x "$ROOT/local-bin/"* 2>/dev/null || true
+chmod +x "$ROOT/hooks/"*.sh 2>/dev/null || true
 
 echo "[post-apply] systemd user..."
 if command -v systemctl >/dev/null 2>&1; then
@@ -34,9 +29,10 @@ fi
 echo "[post-apply] fc-cache..."
 fc-cache -f >/dev/null 2>&1 || true
 
-echo "[post-apply] hyprland reload (se sessão ativa)..."
-if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] && command -v hyprctl >/dev/null 2>&1; then
-  hyprctl reload 2>/dev/null || true
+if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
+  echo "[post-apply] hyprland reload + open binds..."
+  command -v hyprctl >/dev/null 2>&1 && hyprctl reload 2>/dev/null || true
+  command -v dms >/dev/null 2>&1 && dms ipc call hypr openBinds 2>/dev/null || true
 fi
 
 echo "[post-apply] ok"

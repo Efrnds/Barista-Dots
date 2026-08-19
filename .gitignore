@@ -14,6 +14,13 @@ config/hypr/.dms-backups/
 config/DankMaterialShell/.firstlaunch
 config/DankMaterialShell/.changelog-*
 
+# Dotfiles — configs gerados (use templates/)
+config/foot/foot.ini
+config/spicetify/config-xpui.ini
+
+# User-local (não versionar)
+**/.config/dotfiles/user.conf
+
 # Secrets (nunca commitar)
 config/hypr/rdp-server.conf
 **/secrets*

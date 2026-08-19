@@ -1,0 +1,14 @@
+# Barista Dots — configuração local do usuário
+# Copiado para ~/.config/dotfiles/user.conf no primeiro apply (não versionado).
+# Edite paths de apps opcionais aqui.
+
+DOTFILES_USER="${USER}"
+
+# Apps (Super+T/C/B/E)
+TERMINAL_CMD="/usr/bin/foot"
+TERMINAL_CLASS="foot"
+BROWSER_CMD="zen-browser"
+BROWSER_CLASS="zen"
+FILE_MANAGER_CMD="yazi"
+CURSOR_APP="${HOME}/Applications/cursor.AppImage"
+EDITOR_CMD="${CURSOR_APP} --no-sandbox"

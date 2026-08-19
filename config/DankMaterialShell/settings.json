@@ -249,7 +249,7 @@
   "greeterFontFamily": "",
   "greeterWallpaperFillMode": "",
   "greeterPamExternallyManaged": false,
-  "greeterSyncPending": true,
+  "greeterSyncPending": false,
   "greeterSyncBaseline": {
     "showSeconds": false
   },

@@ -1,6 +1,6 @@
 [main]
 # Gerado por hooks/render-config.sh — não editar foot.ini direto no repo
-shell=/home/eduardo/.local/bin/foot-tmux.sh
+shell=${HOME}/.local/bin/foot-tmux.sh
 font=JetBrainsMono Nerd Font:size=11
 pad=15x15
-include=/home/eduardo/.config/foot/colors.ini
+include=${HOME}/.config/foot/colors.ini

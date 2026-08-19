@@ -109,7 +109,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#585b70,underline"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Aliases do usuário
-alias cursor='/home/eduardo/Applications/cursor.AppImage'
+alias cursor="${HOME}/Applications/cursor.AppImage"
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias v='nvim'
@@ -155,7 +155,7 @@ font-install() {
 }
 
 # bun completions
-[ -s "/home/eduardo/.bun/_bun" ] && source "/home/eduardo/.bun/_bun"
+[ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

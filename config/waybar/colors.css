@@ -1,8 +1,0 @@
-/* Lavender Dream Colors for Waybar */
-
-@define-color bg_color rgba(66, 72, 116, 0.85);
-@define-color border_color rgba(166, 177, 225, 0.25);
-@define-color active_color #A6B1E1;
-@define-color text_color #F4EEFF;
-@define-color accent_color #DCD6F7;
-@define-color pill_bg rgba(166, 177, 225, 0.12);

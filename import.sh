@@ -72,10 +72,11 @@ if [[ -d /etc/ly/custom-sessions ]]; then
   cp -a /etc/ly/custom-sessions/. "$DOTFILES/etc/ly/custom-sessions/" 2>/dev/null || true
 fi
 
-# Atualiza lista de pacotes instalados (pacman + AUR via pacman -Q)
+# Atualiza lista de pacotes extras (pacman + AUR via pacman -Q)
 if command -v pacman >/dev/null 2>&1; then
-  pacman -Qqe > "$DOTFILES/packages.txt"
-  echo -e "${GREEN}[import]${RESET} packages.txt ($(wc -l < "$DOTFILES/packages.txt") pacotes)"
+  mkdir -p "$DOTFILES/packages"
+  pacman -Qqe > "$DOTFILES/packages/extras.txt"
+  echo -e "${GREEN}[import]${RESET} packages/extras.txt ($(wc -l < "$DOTFILES/packages/extras.txt") pacotes)"
 fi
 
 echo -e "${GREEN}=== Import concluído. Revise com git diff e commit. ===${RESET}"

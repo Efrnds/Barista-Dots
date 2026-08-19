@@ -6,7 +6,43 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GREEN='\033[32m'
 RED='\033[31m'
 BLUE='\033[34m'
+YELLOW='\033[33m'
 RESET='\033[0m'
+
+INSTALL_EXTRAS=0
+INSTALL_MINIMAL=0
+
+usage() {
+  cat <<EOF
+Uso: ./install.sh [opções]
+
+  (sem flags)   core packages + apply + session + doctor
+  --extras      instala também packages/extras.txt
+  --minimal     só core, não altera shell padrão (chsh)
+  -h, --help    esta ajuda
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --extras) INSTALL_EXTRAS=1; shift ;;
+    --minimal) INSTALL_MINIMAL=1; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "Opção desconhecida: $1"; usage; exit 1 ;;
+  esac
+done
+
+install_pkg_file() {
+  local file="$1"
+  [[ -f "$file" ]] || return 0
+  echo -e "${BLUE}[*] Pacotes de $(basename "$file")...${RESET}"
+  while read -r pkg; do
+    [[ -z "$pkg" || "$pkg" =~ ^# ]] && continue
+    if ! pacman -Qi "$pkg" &>/dev/null; then
+      yay -S --needed --noconfirm "$pkg" || echo -e "${YELLOW}[!] falhou: $pkg${RESET}"
+    fi
+  done < "$file"
+}
 
 echo -e "${BLUE}=== Barista Dots — install ===${RESET}"
 
@@ -15,7 +51,6 @@ if [[ "$EUID" -eq 0 ]]; then
   exit 1
 fi
 
-# yay
 if ! command -v yay >/dev/null 2>&1; then
   echo -e "${BLUE}[*] Instalando yay...${RESET}"
   sudo pacman -S --needed --noconfirm git base-devel
@@ -25,62 +60,41 @@ else
   echo -e "${GREEN}[v] yay ok${RESET}"
 fi
 
-# Pacotes essenciais primeiro (stack atual: Hyprland + DMS)
-ESSENTIAL=(
-  hyprland hypridle hyprlock hyprpolkitagent
-  dms-shell dms-shell-hyprland foot tmux fuzzel zsh
-  pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber
-  networkmanager bluez bluez-utils
-  grim slurp wl-clipboard cliphist
-  starship fastfetch btop cava yazi neovim
-  noto-fonts noto-fonts-emoji ttf-jetbrains-mono-nerd
-  catppuccin-gtk-theme-macchiato catppuccin-cursors-macchiato
-  ly udiskie jq ripgrep fd
-)
-
-echo -e "${BLUE}[*] Pacotes essenciais...${RESET}"
-for pkg in "${ESSENTIAL[@]}"; do
-  if ! pacman -Qi "$pkg" &>/dev/null; then
-    yay -S --needed --noconfirm "$pkg" || echo -e "${RED}[!] falhou: $pkg${RESET}"
-  fi
-done
-
-# Restante do packages.txt (opcional, ignora erros)
-if [[ -f "$DOTFILES/packages.txt" ]]; then
-  echo -e "${BLUE}[*] Pacotes de packages.txt...${RESET}"
-  while read -r pkg; do
-    [[ -z "$pkg" ]] && continue
-    pacman -Qi "$pkg" &>/dev/null && continue
-    yay -S --needed --noconfirm "$pkg" || echo -e "${RED}[!] falhou: $pkg${RESET}"
-  done < "$DOTFILES/packages.txt"
+install_pkg_file "$DOTFILES/packages/core.txt"
+if [[ "$INSTALL_EXTRAS" -eq 1 ]]; then
+  install_pkg_file "$DOTFILES/packages/extras.txt"
 fi
 
-# Aplicar dotfiles (symlinks)
 "$DOTFILES/apply.sh"
 
-# Session manager (ly@tty1 ou DMS greeter — NÃO usar "systemctl enable ly")
 echo -e "${BLUE}[*] Session manager...${RESET}"
 "$DOTFILES/hooks/setup-session.sh"
 
-# Serviços de sistema
 echo -e "${BLUE}[*] Serviços systemd (system)...${RESET}"
-for svc in NetworkManager bluetooth docker cronie tlp ufw cups; do
+for svc in NetworkManager bluetooth; do
   sudo -A systemctl enable "$svc" 2>/dev/null || true
 done
 
-# Shell padrão (só se zsh existir — evita "failed to initialize user" no Ly)
-if command -v zsh >/dev/null 2>&1; then
+if [[ "$INSTALL_EXTRAS" -eq 1 ]]; then
+  for svc in docker cronie tlp ufw cups; do
+    sudo -A systemctl enable "$svc" 2>/dev/null || true
+  done
+fi
+
+if [[ "$INSTALL_MINIMAL" -eq 0 ]] && command -v zsh >/dev/null 2>&1; then
   CURRENT_SHELL="$(getent passwd "$USER" | cut -d: -f7)"
   ZSH_PATH="$(command -v zsh)"
   if [[ "$CURRENT_SHELL" != "$ZSH_PATH" && -x "$ZSH_PATH" ]]; then
     echo -e "${BLUE}[*] Definindo zsh como shell padrão...${RESET}"
     sudo -A chsh -s "$ZSH_PATH" "$USER" || true
   fi
-else
-  echo -e "${RED}[!] zsh não instalado — mantendo shell atual (importante pro Ly)${RESET}"
+elif [[ "$INSTALL_MINIMAL" -eq 0 ]]; then
+  echo -e "${YELLOW}[!] zsh não instalado — mantendo shell atual${RESET}"
 fi
 
 "$DOTFILES/hooks/validate-login.sh" || true
+"$DOTFILES/doctor.sh" || true
 
 echo -e "${GREEN}=== Instalação concluída ===${RESET}"
-echo "Reinicie a sessão. Depois de git pull use: ~/dotfiles/update.sh"
+echo "Reinicie. Depois de git pull: ~/dotfiles/update.sh"
+echo "Debug: ~/dotfiles/doctor.sh"

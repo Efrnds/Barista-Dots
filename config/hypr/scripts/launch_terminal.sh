@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-exec "$HOME/.config/hypr/scripts/launch_or_focus.sh" foot /usr/bin/foot
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/dotfiles-env.sh"
+
+exec "$HOME/.config/hypr/scripts/launch_or_focus.sh" "$TERMINAL_CLASS" "$TERMINAL_CMD"

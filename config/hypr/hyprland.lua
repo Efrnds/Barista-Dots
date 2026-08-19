@@ -88,8 +88,6 @@ hl.animation({ leaf = "fade", enabled = true, speed = 5, bezier = "default" })
 hl.animation({ leaf = "border", enabled = true, speed = 1, bezier = "default" })
 hl.animation({ leaf = "layers", enabled = true, speed = 3, bezier = "default" })
 
-hl.layer_rule({ match = { namespace = "^(quickshell).*" }, blur = true, ignore_alpha = 0 })
-hl.layer_rule({ match = { namespace = "^(quickshell)$" }, no_anim = true })
 hl.layer_rule({ match = { namespace = "^dms:.*" }, no_anim = true })
 
 require("dms.colors")

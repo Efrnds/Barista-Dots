@@ -22,7 +22,7 @@ cp "$HOME/.config/hypr/themes/${NEW_THEME}_colors.conf" "$HOME/.config/hypr/them
 
 # 2. (Removido) Geração de cores do Eww
 # O Eww foi removido do seu setup; manter esse passo quebra o script quando
-# `/home/eduardo/.config/eww/` não existe.
+# eww removido do stack — configs antigas não existem mais.
 
 # 3. Copia as cores do Foot
 cp "$HOME/.config/foot/themes/${NEW_THEME}_colors.ini" "$HOME/.config/foot/colors.ini"

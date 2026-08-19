@@ -1,9 +1,0 @@
-/* Lavender Dream Colors for Rofi */
-
-* {
-    bg: rgba(66, 72, 116, 0.95);
-    bg-alt: rgba(166, 177, 225, 0.15);
-    accent: #A6B1E1;
-    fg: #F4EEFF;
-    fg-alt: #DCD6F7;
-}

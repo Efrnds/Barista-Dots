@@ -13,3 +13,6 @@ echo "[update] apply..."
 
 echo "[update] session manager..."
 "$DOTFILES/hooks/setup-session.sh"
+
+echo "[update] doctor..."
+"$DOTFILES/doctor.sh" || true

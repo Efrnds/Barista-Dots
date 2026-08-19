@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck ripgrep
+
+      - name: Shellcheck scripts
+        run: |
+          find . -type f \( -name '*.sh' \) ! -path './.git/*' -print0 \
+            | xargs -0 -r shellcheck -e SC1091,SC2034
+
+      - name: No hardcoded /home/eduardo in config
+        run: |
+          if rg -q '/home/eduardo' config templates hooks \
+            -g '!config/foot/foot.ini' -g '!config/spicetify/config-xpui.ini'; then
+            echo "Hardcoded paths found:"
+            rg '/home/eduardo' config templates hooks \
+              -g '!config/foot/foot.ini' -g '!config/spicetify/config-xpui.ini'
+            exit 1
+          fi
+
+      - name: Required files exist
+        run: |
+          test -f packages/core.txt
+          test -f templates/foot.ini.in
+          test -f templates/user.conf.example
+          test -f hooks/render-config.sh
+          test -f doctor.sh
+          test -f tests/smoke.sh

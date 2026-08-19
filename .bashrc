@@ -8,4 +8,4 @@
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 PS1='[\u@\h \W]\$ '
-alias cursor="/home/eduardo/Applications/cursor.AppImage"
+alias cursor="${HOME}/Applications/cursor.AppImage"

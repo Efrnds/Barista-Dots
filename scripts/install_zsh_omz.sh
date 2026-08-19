@@ -23,7 +23,7 @@ if [ -f "$HOME/.zshrc" ]; then
     # Adiciona alias úteis que você já usava no bashrc
     if ! grep -q "alias cursor=" "$HOME/.zshrc"; then
         echo -e "\n# Aliases do usuário" >> "$HOME/.zshrc"
-        echo "alias cursor='/home/eduardo/Applications/cursor.AppImage'" >> "$HOME/.zshrc"
+        echo "alias cursor='${HOME}/Applications/cursor.AppImage'" >> "$HOME/.zshrc"
         echo "alias ls='ls --color=auto'" >> "$HOME/.zshrc"
         echo "alias grep='grep --color=auto'" >> "$HOME/.zshrc"
     fi

@@ -44,9 +44,12 @@ EOF
 
 echo -e "${BLUE}=== Aplicando dotfiles ($DOTFILES) ===${RESET}"
 
+echo -e "${BLUE}[*] render templates...${RESET}"
+chmod +x "$DOTFILES/hooks/render-config.sh"
+"$DOTFILES/hooks/render-config.sh"
+
 mkdir -p "$HOME/.config" "$HOME/.local/bin"
 
-# ~/.config/* (diretórios)
 CONFIG_DIRS=(
   hypr
   foot
@@ -64,10 +67,8 @@ for dir in "${CONFIG_DIRS[@]}"; do
   link_path "$DOTFILES/config/$dir" "$HOME/.config/$dir"
 done
 
-# Arquivos soltos em ~/.config
 link_file "$DOTFILES/config/starship.toml" "$HOME/.config/starship.toml"
 
-# systemd user (só units versionadas)
 mkdir -p "$HOME/.config/systemd/user"
 if [[ -d "$DOTFILES/systemd/user" ]]; then
   for unit in "$DOTFILES/systemd/user/"*; do
@@ -76,7 +77,6 @@ if [[ -d "$DOTFILES/systemd/user" ]]; then
   done
 fi
 
-# ~/.local/bin
 if [[ -d "$DOTFILES/local-bin" ]]; then
   for bin in "$DOTFILES/local-bin/"*; do
     [[ -f "$bin" ]] || continue
@@ -84,16 +84,14 @@ if [[ -d "$DOTFILES/local-bin" ]]; then
   done
 fi
 
-# Dotfiles da home
 for f in .zshrc .bashrc .gitconfig; do
   [[ -f "$DOTFILES/home/$f" ]] && link_file "$DOTFILES/home/$f" "$HOME/$f"
 done
 
-# Script de sync foot dentro do hypr (symlink via config/hypr já cobre, mas garante local-bin linkado)
-
 install_git_hooks
-chmod +x "$DOTFILES/apply.sh" "$DOTFILES/import.sh" "$DOTFILES/install.sh" "$DOTFILES/update.sh" 2>/dev/null || true
-chmod +x "$DOTFILES/hooks/post-apply.sh" 2>/dev/null || true
+chmod +x "$DOTFILES/apply.sh" "$DOTFILES/import.sh" "$DOTFILES/install.sh" "$DOTFILES/update.sh" "$DOTFILES/doctor.sh" 2>/dev/null || true
+chmod +x "$DOTFILES/hooks/"*.sh 2>/dev/null || true
+chmod +x "$DOTFILES/tests/"*.sh 2>/dev/null || true
 
 echo -e "${BLUE}[*] hooks pós-apply...${RESET}"
 "$DOTFILES/hooks/post-apply.sh"

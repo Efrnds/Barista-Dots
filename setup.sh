@@ -17,6 +17,6 @@ if [[ -d "$TARGET/.git" ]]; then
 else
   git clone "$REPO" "$TARGET"
   cd "$TARGET"
-  chmod +x install.sh apply.sh import.sh update.sh
+  chmod +x install.sh apply.sh import.sh update.sh doctor.sh tests/smoke.sh hooks/*.sh
   ./install.sh
 fi

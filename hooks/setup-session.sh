@@ -20,7 +20,7 @@ deploy_ly_config() {
   local src="$ROOT/etc/ly/config.ini"
   [[ -f "$src" ]] || return 0
   echo "[session] deploy /etc/ly/config.ini"
-  need_sudo mkdir -p /etc/ly
+  need_sudo mkdir -p /etc/ly /etc/ly/xsessions-empty
   need_sudo cp -a "$src" /etc/ly/config.ini
 
   if [[ -d "$ROOT/etc/ly/custom-sessions" ]]; then
@@ -93,18 +93,27 @@ resolve_manager() {
 }
 
 main() {
-  local mgr
+  local mgr log="$HOME/.local/state/dotfiles-session.log"
+  mkdir -p "$(dirname "$log")"
   mgr="$(resolve_manager)"
-  echo "[session] manager=$mgr (config=$SESSION_MANAGER)"
+  {
+    echo "=== $(date -Iseconds) setup-session ==="
+    echo "manager=$mgr config=$SESSION_MANAGER"
+  } >>"$log"
 
   case "$mgr" in
-    ly) enable_ly ;;
-    dms-greeter) enable_dms_greeter ;;
+    ly)
+      enable_ly >>"$log" 2>&1
+      ;;
+    dms-greeter)
+      enable_dms_greeter >>"$log" 2>&1
+      ;;
     none)
-      echo "[session] nenhum session manager detectado/configurado"
+      echo "[session] nenhum session manager detectado/configurado" | tee -a "$log"
       return 0
       ;;
   esac
+  echo "[session] log: $log"
 }
 
 main "$@"

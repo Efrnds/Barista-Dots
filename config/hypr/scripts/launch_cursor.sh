@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CURSOR="$HOME/Applications/cursor.AppImage"
-exec "$HOME/.config/hypr/scripts/launch_or_focus.sh" cursor "$CURSOR" --no-sandbox
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/dotfiles-env.sh"
+
+exec "$HOME/.config/hypr/scripts/launch_or_focus.sh" cursor "$CURSOR_APP" --no-sandbox
