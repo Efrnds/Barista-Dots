@@ -61,6 +61,13 @@ for f in .zshrc .bashrc .gitconfig; do
   [[ -f "$HOME/$f" ]] && cp -a "$HOME/$f" "$DOTFILES/home/$f"
 done
 
+# Ly (system config — precisa sudo pra ler/gravar)
+if [[ -r /etc/ly/config.ini ]]; then
+  mkdir -p "$DOTFILES/etc/ly"
+  cp -a /etc/ly/config.ini "$DOTFILES/etc/ly/config.ini"
+  echo -e "${GREEN}[import]${RESET} /etc/ly/config.ini"
+fi
+
 # Atualiza lista de pacotes instalados (pacman + AUR via pacman -Q)
 if command -v pacman >/dev/null 2>&1; then
   pacman -Qqe > "$DOTFILES/packages.txt"

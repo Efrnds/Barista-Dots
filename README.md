@@ -79,13 +79,23 @@ git push
 |--------|--------|
 | `apply.sh` | Symlinks dotfiles → home + post-apply |
 | `import.sh` | Copia configs atuais → repo (antes do commit) |
-| `update.sh` | `git pull` + `apply.sh` |
+| `update.sh` | `git pull` + `apply.sh` + session manager (ly) |
 | `install.sh` | Máquina nova: pacotes + apply |
 | `setup.sh` | Clone + install (one-liner) |
 
 ---
 
-## Pós-apply automático
+## Session manager (Ly)
+
+O Ly 1.4+ usa `ly@tty1.service` (não existe mais `ly.service`). O script `hooks/setup-session.sh` configura isso automaticamente no `install.sh` e no `update.sh`.
+
+Config em `session.conf`:
+```bash
+SESSION_MANAGER=ly      # ou auto | dms-greeter
+LY_TTY=tty1
+```
+
+Seu `/etc/ly/config.ini` customizado fica versionado em `etc/ly/config.ini` e é reaplicado no setup.
 
 - `chmod +x` nos scripts hypr
 - `systemctl --user enable` units (ex: sync Foot ↔ DMS)

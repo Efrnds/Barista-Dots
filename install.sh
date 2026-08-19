@@ -58,10 +58,14 @@ fi
 # Aplicar dotfiles (symlinks)
 "$DOTFILES/apply.sh"
 
+# Session manager (ly@tty1 ou DMS greeter — NÃO usar "systemctl enable ly")
+echo -e "${BLUE}[*] Session manager...${RESET}"
+"$DOTFILES/hooks/setup-session.sh"
+
 # Serviços de sistema
 echo -e "${BLUE}[*] Serviços systemd (system)...${RESET}"
-for svc in NetworkManager bluetooth ly docker cronie tlp ufw cups; do
-  sudo systemctl enable "$svc" 2>/dev/null || true
+for svc in NetworkManager bluetooth docker cronie tlp ufw cups; do
+  sudo -A systemctl enable "$svc" 2>/dev/null || true
 done
 
 # Shell padrão

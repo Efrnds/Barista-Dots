@@ -10,3 +10,6 @@ git pull --rebase --autostash
 
 echo "[update] apply..."
 "$DOTFILES/apply.sh"
+
+echo "[update] session manager..."
+"$DOTFILES/hooks/setup-session.sh"
