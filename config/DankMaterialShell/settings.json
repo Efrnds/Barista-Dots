@@ -10,7 +10,7 @@
       }
     }
   },
-  "matugenScheme": "scheme-neutral",
+  "matugenScheme": "scheme-tonal-spot",
   "matugenContrast": 0,
   "runUserMatugenTemplates": true,
   "matugenTargetMonitor": "",
@@ -590,8 +590,8 @@
           "id": "systemUpdate",
           "enabled": true
         },
-        "music",
         "clock",
+        "music",
         "weather",
         "notificationButton"
       ],
