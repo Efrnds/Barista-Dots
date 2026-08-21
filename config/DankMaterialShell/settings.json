@@ -11,7 +11,7 @@
     }
   },
   "matugenScheme": "scheme-tonal-spot",
-  "matugenContrast": 0,
+  "matugenContrast": -0.4,
   "runUserMatugenTemplates": true,
   "matugenTargetMonitor": "",
   "popupTransparency": 1,
@@ -556,7 +556,11 @@
   "screenPreferences": {},
   "showOnLastDisplay": {},
   "niriOutputSettings": {},
-  "hyprlandOutputSettings": {},
+  "hyprlandOutputSettings": {
+    "WAYLAND-1": {
+      "disabled": true
+    }
+  },
   "displayProfiles": {},
   "activeDisplayProfile": {},
   "displayProfileAutoSelect": false,

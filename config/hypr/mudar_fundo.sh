@@ -59,6 +59,7 @@ like_current_wallpaper() {
 
     # Carrega as informações do wallpaper atual
     if [ -f "$INFO_FILE" ]; then
+        # shellcheck source=/dev/null
         source "$INFO_FILE" 2>/dev/null
     fi
 
@@ -98,10 +99,12 @@ like_current_wallpaper() {
     fi
 
     # Atualiza o arquivo de informações indicando que agora é local
-    echo "WALL_ID='local_wallhaven_${WALL_ID}'" > "$INFO_FILE"
-    echo "WALL_RES='${WALL_RES}'" >> "$INFO_FILE"
-    echo "WALL_URL=''" >> "$INFO_FILE"
-    echo "WALL_STRATEGY='Local Favorito'" >> "$INFO_FILE"
+    {
+        echo "WALL_ID='local_wallhaven_${WALL_ID}'"
+        echo "WALL_RES='${WALL_RES}'"
+        echo "WALL_URL=''"
+        echo "WALL_STRATEGY='Local Favorito'"
+    } > "$INFO_FILE"
 
     exit 0
 }
@@ -117,7 +120,8 @@ apply_wallpaper_file() {
         exit 1
     fi
 
-    local filename=$(basename "$file_path")
+    local filename
+    filename=$(basename "$file_path")
     local file_id="${filename%.*}"
     local ext="${filename##*.}"
     ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
@@ -168,10 +172,12 @@ apply_wallpaper_file() {
     fi
 
     # Salva informações locais
-    echo "WALL_ID='local_${file_id}'" > "$INFO_FILE"
-    echo "WALL_RES='local'" >> "$INFO_FILE"
-    echo "WALL_URL=''" >> "$INFO_FILE"
-    echo "WALL_STRATEGY='${strategy}'" >> "$INFO_FILE"
+    {
+        echo "WALL_ID='local_${file_id}'"
+        echo "WALL_RES='local'"
+        echo "WALL_URL=''"
+        echo "WALL_STRATEGY='${strategy}'"
+    } > "$INFO_FILE"
 
     echo "Wallpaper aplicado: $filename"
     if command -v notify-send >/dev/null 2>&1; then
@@ -191,7 +197,8 @@ apply_local_wallpaper() {
     fi
 
     # Sorteia uma imagem/vídeo na pasta de favoritos (suportando imagens, gifs, webps e vídeos)
-    local random_fav=$(find "$FAV_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" -o -name "*.svg" -o -name "*.gif" -o -name "*.webp" -o -name "*.mp4" -o -name "*.webm" \) 2>/dev/null | shuf -n 1)
+    local random_fav
+    random_fav=$(find "$FAV_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" -o -name "*.svg" -o -name "*.gif" -o -name "*.webp" -o -name "*.mp4" -o -name "*.webm" \) 2>/dev/null | shuf -n 1)
 
     if [ -z "$random_fav" ]; then
         echo "Nenhum arquivo de imagem/vídeo válido encontrado nos favoritos."
@@ -320,7 +327,8 @@ fetch_wallpapers() {
 
     # Adiciona a query se existir
     if [ -n "$q" ]; then
-        local encoded_q=$(urlencode "$q")
+        local encoded_q
+        encoded_q=$(urlencode "$q")
         api_url="${api_url}&q=${encoded_q}"
     fi
 
@@ -408,10 +416,12 @@ while [ $ATTEMPT -le $MAX_RETRIES ] && [ "$SUCCESS" = "false" ]; do
                 apply_wallpaper_colors "$WALL_PATH"
                 
                 # Salva informações do wallpaper atual para poder curtir depois
-                echo "WALL_ID='$WALL_ID'" > "$INFO_FILE"
-                echo "WALL_RES='$WALL_RES'" >> "$INFO_FILE"
-                echo "WALL_URL='$WALL_URL'" >> "$INFO_FILE"
-                echo "WALL_STRATEGY='$STRATEGY_DESC'" >> "$INFO_FILE"
+                {
+                    echo "WALL_ID='$WALL_ID'"
+                    echo "WALL_RES='$WALL_RES'"
+                    echo "WALL_URL='$WALL_URL'"
+                    echo "WALL_STRATEGY='$STRATEGY_DESC'"
+                } > "$INFO_FILE"
 
                 # Salva o ID no histórico (mantém apenas os últimos 15)
                 echo "$WALL_ID" >> "$HISTORY_FILE"

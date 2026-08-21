@@ -23,13 +23,13 @@ while true; do
             # Se a bateria estiver abaixo de 12%
             if [ "$PERCENT" -le 12 ]; then
                 # Verifica se já notificamos sobre esse dispositivo nesta sessão
-                if [[ ! "$NOTIFICADOS" =~ "$MODEL" ]]; then
+                if [[ "$NOTIFICADOS" != *"|$MODEL"* ]]; then
                     notify-send -u critical -a "Dispositivo Sem Fio" "🔋 Bateria Baixa!" "O dispositivo '$MODEL' está com apenas ${PERCENT}% de carga."
                     NOTIFICADOS="$NOTIFICADOS|$MODEL"
                 fi
             else
                 # Se carregou, remove da lista de notificados para permitir futuros alertas
-                NOTIFICADOS=$(echo "$NOTIFICADOS" | sed "s/|$MODEL//")
+                NOTIFICADOS="${NOTIFICADOS//|$MODEL/}"
             fi
         fi
     done

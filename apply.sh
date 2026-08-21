@@ -16,7 +16,8 @@ link_path() {
   fi
   mkdir -p "$(dirname "$dest")"
   if [[ -e "$dest" && ! -L "$dest" ]]; then
-    local bak="${dest}.pre-dotfiles-$(date +%Y%m%d%H%M%S)"
+    local bak
+    bak="${dest}.pre-dotfiles-$(date +%Y%m%d%H%M%S)"
     echo -e "${YELLOW}[backup]${RESET} $dest -> $bak"
     mv "$dest" "$bak"
   fi
@@ -87,6 +88,12 @@ fi
 for f in .zshrc .bashrc .gitconfig; do
   [[ -f "$DOTFILES/home/$f" ]] && link_file "$DOTFILES/home/$f" "$HOME/$f"
 done
+
+if [[ -d "$DOTFILES/wallpapers" ]]; then
+  mkdir -p "$HOME/Pictures" "$HOME/Imagens"
+  link_path "$DOTFILES/wallpapers" "$HOME/Pictures/wallpapers"
+  link_path "$DOTFILES/wallpapers" "$HOME/Imagens/wallpapers"
+fi
 
 install_git_hooks
 chmod +x "$DOTFILES/apply.sh" "$DOTFILES/import.sh" "$DOTFILES/install.sh" "$DOTFILES/update.sh" "$DOTFILES/doctor.sh" 2>/dev/null || true

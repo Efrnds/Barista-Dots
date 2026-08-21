@@ -77,7 +77,7 @@ if command -v "$HOME/.config/hypr/scripts/launch_terminal.sh" &>/dev/null; then
   ok "launch_terminal.sh"
 fi
 
-command -v zen-browser &>/dev/null && ok "zen-browser" || warn "zen-browser ausente (opcional)"
-[[ -x "${HOME}/Applications/cursor.AppImage" ]] && ok "cursor AppImage" || warn "cursor AppImage ausente (opcional)"
+if command -v zen-browser &>/dev/null; then ok "zen-browser"; else warn "zen-browser ausente (opcional)"; fi
+if [[ -x "${HOME}/Applications/cursor.AppImage" ]]; then ok "cursor AppImage"; else warn "cursor AppImage ausente (opcional)"; fi
 
 exit "$ERR"

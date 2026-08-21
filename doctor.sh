@@ -26,13 +26,13 @@ section "Binários core"
 for cmd in hyprland foot tmux dms fuzzel start-hyprland; do
   if command -v "$cmd" >/dev/null 2>&1; then pass "$cmd"; else fail "$cmd ausente"; fi
 done
-pacman -Qi ly &>/dev/null && pass "ly (pacote)" || warn "ly não instalado"
+if pacman -Qi ly &>/dev/null; then pass "ly (pacote)"; else warn "ly não instalado"; fi
 
 section "Symlinks / configs"
-[[ -L "$HOME/.config/hypr" || -d "$HOME/.config/hypr" ]] && pass "~/.config/hypr" || fail "~/.config/hypr"
-[[ -f "$HOME/.config/hypr/hyprland.lua" ]] && pass "hyprland.lua" || fail "hyprland.lua"
-[[ -f "$HOME/.config/foot/foot.ini" ]] && pass "foot.ini" || fail "foot.ini"
-[[ -f "$HOME/.config/dotfiles/user.conf" ]] && pass "user.conf" || warn "user.conf ausente (será criado no apply)"
+if [[ -L "$HOME/.config/hypr" || -d "$HOME/.config/hypr" ]]; then pass "$HOME/.config/hypr"; else fail "$HOME/.config/hypr"; fi
+if [[ -f "$HOME/.config/hypr/hyprland.lua" ]]; then pass "hyprland.lua"; else fail "hyprland.lua"; fi
+if [[ -f "$HOME/.config/foot/foot.ini" ]]; then pass "foot.ini"; else fail "foot.ini"; fi
+if [[ -f "$HOME/.config/dotfiles/user.conf" ]]; then pass "user.conf"; else warn "user.conf ausente (será criado no apply)"; fi
 
 FOOT_SHELL="$(grep -E '^shell=' "$HOME/.config/foot/foot.ini" 2>/dev/null | cut -d= -f2- || true)"
 if [[ -n "$FOOT_SHELL" && "$FOOT_SHELL" == "$HOME"* && -x "$FOOT_SHELL" ]]; then
@@ -71,7 +71,7 @@ fi
 
 section "Scripts de launch"
 for s in launch_terminal.sh launch_or_focus.sh launch_cursor.sh toggle_zen_browser.sh; do
-  [[ -x "$HOME/.config/hypr/scripts/$s" ]] && pass "$s" || fail "$s não executável"
+  if [[ -x "$HOME/.config/hypr/scripts/$s" ]]; then pass "$s"; else fail "$s não executável"; fi
 done
 
 section "Hypr binds (sessão Wayland)"
@@ -99,8 +99,8 @@ else
 fi
 
 section "Apps opcionais"
-command -v zen-browser >/dev/null && pass "zen-browser" || warn "zen-browser (Super+B)"
-[[ -x "${HOME}/Applications/cursor.AppImage" ]] && pass "cursor AppImage" || warn "cursor (Super+C)"
+if command -v zen-browser >/dev/null; then pass "zen-browser"; else warn "zen-browser (Super+B)"; fi
+if [[ -x "${HOME}/Applications/cursor.AppImage" ]]; then pass "cursor AppImage"; else warn "cursor (Super+C)"; fi
 
 section "Resumo"
 if [[ "$errors" -eq 0 ]]; then

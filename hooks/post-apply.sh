@@ -36,8 +36,12 @@ fc-cache -f >/dev/null 2>&1 || true
 
 if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
   echo "[post-apply] hyprland reload + open binds..."
-  command -v hyprctl >/dev/null 2>&1 && hyprctl reload 2>/dev/null || true
-  command -v dms >/dev/null 2>&1 && dms ipc call hypr openBinds 2>/dev/null || true
+  if command -v hyprctl >/dev/null 2>&1; then hyprctl reload 2>/dev/null || true; fi
+  if command -v dms >/dev/null 2>&1; then dms ipc call hypr openBinds 2>/dev/null || true; fi
+  if command -v dms >/dev/null 2>&1 && [[ -f "$HOME/.config/hypr/current_wallpaper.jpg" ]]; then
+    echo "[post-apply] aplicando wallpaper e tema no DMS..."
+    dms ipc call wallpaper set "$HOME/.config/hypr/current_wallpaper.jpg" 2>/dev/null || true
+  fi
 fi
 
 echo "[post-apply] ok"

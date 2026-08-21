@@ -22,17 +22,19 @@ if [ -f "$HOME/.zshrc" ]; then
     
     # Adiciona alias úteis que você já usava no bashrc
     if ! grep -q "alias cursor=" "$HOME/.zshrc"; then
-        echo -e "\n# Aliases do usuário" >> "$HOME/.zshrc"
-        echo "alias cursor='${HOME}/Applications/cursor.AppImage'" >> "$HOME/.zshrc"
-        echo "alias ls='ls --color=auto'" >> "$HOME/.zshrc"
-        echo "alias grep='grep --color=auto'" >> "$HOME/.zshrc"
+        {
+            echo -e "\n# Aliases do usuário"
+            echo "alias cursor='${HOME}/Applications/cursor.AppImage'"
+            echo "alias ls='ls --color=auto'"
+            echo "alias grep='grep --color=auto'"
+        } >> "$HOME/.zshrc"
     fi
 fi
 
 # Altera o shell padrão para o zsh
 if [ "$SHELL" != "/usr/bin/zsh" ] && [ "$SHELL" != "/bin/zsh" ]; then
     echo "Alterando o shell padrão para Zsh..."
-    chsh -s $(which zsh)
+    chsh -s "$(command -v zsh)"
 fi
 
 echo "Oh My Zsh configurado com sucesso! 🚀 Abra um novo terminal para ver a mudança."

@@ -92,6 +92,8 @@ hl.layer_rule({ match = { namespace = "^dms:.*" }, no_anim = true })
 
 require("dms.colors")
 require("dms.outputs")
+-- Saída virtual (ex.: sessão Plasma no tty paralelo) — sem isso o layout overlapa.
+hl.monitor({ output = "WAYLAND-1", disabled = true })
 require("dms.layout")
 require("dms.cursor")
 require("dms.binds")

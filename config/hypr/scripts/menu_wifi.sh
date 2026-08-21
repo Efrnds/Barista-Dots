@@ -45,14 +45,26 @@ else
     ssid=${chosen:2}
     if nmcli -t -f NAME connection show | grep -qx "$ssid"; then
         notify-send "Wi-Fi" "Conectando a rede salva: $ssid..."
-        nmcli connection up "$ssid" && notify-send "Wi-Fi" "Conectado a $ssid" || notify-send -u critical "Wi-Fi" "Falha ao conectar a $ssid"
+        if nmcli connection up "$ssid"; then
+            notify-send "Wi-Fi" "Conectado a $ssid"
+        else
+            notify-send -u critical "Wi-Fi" "Falha ao conectar a $ssid"
+        fi
     elif [ "$icon" = "" ]; then
         password=$("$PICKER" --password -p "Senha para $ssid")
         [ -z "$password" ] && exit 0
         notify-send "Wi-Fi" "Conectando a $ssid..."
-        nmcli dev wifi connect "$ssid" password "$password" && notify-send "Wi-Fi" "Conectado a $ssid" || notify-send -u critical "Wi-Fi" "Falha ao conectar. Senha incorreta?"
+        if nmcli dev wifi connect "$ssid" password "$password"; then
+            notify-send "Wi-Fi" "Conectado a $ssid"
+        else
+            notify-send -u critical "Wi-Fi" "Falha ao conectar. Senha incorreta?"
+        fi
     else
         notify-send "Wi-Fi" "Conectando a $ssid..."
-        nmcli dev wifi connect "$ssid" && notify-send "Wi-Fi" "Conectado a $ssid" || notify-send -u critical "Wi-Fi" "Falha ao conectar a $ssid"
+        if nmcli dev wifi connect "$ssid"; then
+            notify-send "Wi-Fi" "Conectado a $ssid"
+        else
+            notify-send -u critical "Wi-Fi" "Falha ao conectar a $ssid"
+        fi
     fi
 fi

@@ -19,10 +19,10 @@ BYTES_ANTES=$(df / -B1 | awk 'NR==2 {print $4}')
 
 # 2. Remover pacotes órfãos (se houver)
 echo "-> Verificando pacotes órfãos..."
-ORPHANS=$(pacman -Qtdq)
-if [ -n "$ORPHANS" ]; then
+mapfile -t orphans < <(pacman -Qtdq 2>/dev/null || true)
+if ((${#orphans[@]})); then
     echo "Removendo pacotes órfãos..."
-    sudo pacman -Rns --noconfirm $ORPHANS
+    sudo pacman -Rns --noconfirm "${orphans[@]}"
 else
     echo "Nenhum pacote órfão encontrado."
 fi

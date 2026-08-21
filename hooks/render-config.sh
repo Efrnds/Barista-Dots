@@ -13,7 +13,10 @@ if [[ ! -f "$USER_CONF" ]]; then
 fi
 
 export HOME
+# envsubst precisa das aspas simples para expandir ${HOME} no template, não no shell
+# shellcheck disable=SC2016
 envsubst '${HOME}' < "$ROOT/templates/foot.ini.in" > "$ROOT/config/foot/foot.ini"
+# shellcheck disable=SC2016
 envsubst '${HOME}' < "$ROOT/templates/spicetify-config-xpui.ini.in" > "$ROOT/config/spicetify/config-xpui.ini"
 
 echo "[render-config] foot.ini + spicetify config renderizados"
