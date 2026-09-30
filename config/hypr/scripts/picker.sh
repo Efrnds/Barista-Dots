@@ -12,7 +12,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 exec fuzzel --dmenu --prompt="$PROMPT > " \
-    --font="JetBrainsMono Nerd Font:size=11" \
+    --font="ABC Areal Mono:size=11" \
     --width=50 --lines=15 \
     --border-radius=12 \
     --layer=overlay

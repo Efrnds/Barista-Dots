@@ -1,0 +1,10 @@
+# Configuração do Servidor RDP
+# Copie para ~/.config/hypr/rdp-server.conf (usado pelo atalho Super+R)
+
+RDP_HOST="10.1.10.254"
+RDP_PORT="9299"
+RDP_USER="eduardo"
+RDP_PASS=""
+RDP_AUTO_LOGIN=1
+RDP_LOGIN_STYLE="local"  # 'local' (.\usuario), 'plain' (usuario) ou 'DOMINIO\usuario'
+RDP_SEC="tls"            # 'tls', 'nla' ou 'rdp'

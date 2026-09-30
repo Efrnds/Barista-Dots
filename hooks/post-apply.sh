@@ -34,6 +34,24 @@ fi
 echo "[post-apply] fc-cache..."
 fc-cache -f >/dev/null 2>&1 || true
 
+# apple_hyprcursor (AUR) só traz hyprcursors; XCursor fica em macOS.
+# Sobrescreve localmente macOS-hypr com os dois pra DMS/XWayland usarem o mesmo nome.
+if [[ -d /usr/share/icons/macOS-hypr/hyprcursors && -d /usr/share/icons/macOS/cursors ]]; then
+  echo "[post-apply] cursor macOS-hypr (hypr + xcursor)..."
+  local_theme="$HOME/.local/share/icons/macOS-hypr"
+  mkdir -p "$local_theme"
+  cat > "$local_theme/index.theme" << 'EOF'
+[Icon Theme]
+Name=macOS-hypr
+Comment=Apple macOS cursors (hyprcursor + xcursor)
+Inherits=hicolor
+Example=left_ptr
+EOF
+  cp -f /usr/share/icons/macOS-hypr/manifest.hl "$local_theme/manifest.hl"
+  ln -sfn /usr/share/icons/macOS-hypr/hyprcursors "$local_theme/hyprcursors"
+  ln -sfn /usr/share/icons/macOS/cursors "$local_theme/cursors"
+fi
+
 if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
   echo "[post-apply] hyprland reload + open binds..."
   if command -v hyprctl >/dev/null 2>&1; then hyprctl reload 2>/dev/null || true; fi

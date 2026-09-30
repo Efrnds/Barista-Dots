@@ -23,6 +23,7 @@ hl.unbind("SUPER + SHIFT + E")
 hl.unbind("SUPER + I")
 hl.unbind("SUPER + comma")
 hl.unbind("SUPER + Y")
+hl.unbind("CTRL + SHIFT + R")
 -- SUPER+SHIFT+Slash: painel DMS de keybinds (mantido)
 
 -- Shell / DMS panels (mapped from old iNiR binds)
@@ -58,6 +59,7 @@ hl.bind("SUPER + ALT + Y", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_vpn.sh")
 hl.bind("SUPER + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_network_info.sh"))
 hl.bind("SUPER + ALT + U", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_audio.sh"))
 hl.bind("SUPER + ALT + S", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_ssh.sh"))
+hl.bind("SUPER + ALT + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/mas-trigger.sh"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("bash " .. home .. "/.config/hypr/scripts/rdp-server.sh"))
 
 -- Scratchpads / toggles
@@ -91,4 +93,4 @@ hl.bind("SUPER + SHIFT + 0", hl.dsp.window.move({ workspace = "10" }))
 hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("loginctl lock-session"), { locked = true })
 
 -- Btop float
-hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd([[foot -o main.font="JetBrainsMono Nerd Font:size=9.5" --app-id=btop-float -e btop]]))
+hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd([[foot -o main.font="ABC Areal Mono:size=9.5" --app-id=btop-float -e btop]]))

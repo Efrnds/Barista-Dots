@@ -3,16 +3,26 @@
 hl.config({
 	general = {
 		gaps_in = 4,
-		gaps_out = 4,
-		border_size = 2,
-		resize_on_border = false,
+		gaps_out = 6,
+		border_size = 1,
+		resize_on_border = true,
 	},
 	decoration = {
-		rounding = 12,
+		rounding = 20,
 	},
 })
 
 hl.layer_rule({
+	match = { namespace = "^dms:.*$" },
+	xray = true,
+})
+
+hl.layer_rule({
 	match = { namespace = "^dms:bar$" },
+	xray = true,
+})
+
+hl.layer_rule({
+	match = { namespace = "^dms:dankisland$" },
 	xray = true,
 })

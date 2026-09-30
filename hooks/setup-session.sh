@@ -10,7 +10,7 @@ LY_TTY="${LY_TTY:-tty1}"
 
 need_sudo() {
   if [[ "$EUID" -ne 0 ]]; then
-    sudo -A "$@"
+    sudo "$@"
   else
     "$@"
   fi
@@ -59,8 +59,8 @@ enable_ly() {
 }
 
 enable_dms_greeter() {
-  if ! command -v dms >/dev/null 2>&1; then
-    echo "[session] dms não encontrado"
+  if ! command -v dms-greeter >/dev/null 2>&1 && ! command -v dms >/dev/null 2>&1; then
+    echo "[session] dms-greeter não encontrado"
     return 1
   fi
   if ! pacman -Qi greetd &>/dev/null 2>&1; then
@@ -69,7 +69,11 @@ enable_dms_greeter() {
   fi
 
   echo "[session] DMS greeter (greetd)"
-  need_sudo dms greeter install -y 2>/dev/null || need_sudo dms greeter enable 2>/dev/null || true
+  if command -v dms-greeter >/dev/null 2>&1; then
+    need_sudo dms-greeter install -y 2>/dev/null || need_sudo dms-greeter enable 2>/dev/null || true
+  else
+    need_sudo dms greeter install -y 2>/dev/null || need_sudo dms greeter enable 2>/dev/null || true
+  fi
   need_sudo systemctl enable greetd
   need_sudo systemctl set-default graphical.target 2>/dev/null || true
   return 0

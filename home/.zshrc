@@ -166,6 +166,7 @@ export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 # Skyrim+ Lite / MO2
 alias mo2-skyrim='steam steam://rungameid/489830'
 alias skyrim-plus-dl='python3 ~/Games/SkyrimPlusLite/tools/download_nexus_mods.py'
+alias flushdns='sudo resolvectl flush-caches'
 
 function agy-chats() {
   for d in ~/.gemini/antigravity-cli/brain/*; do

@@ -1,0 +1,17 @@
+{
+  "lockfileVersion": 1,
+  "plugins": {
+    "calculator": {
+      "repo": "https://github.com/rochacbruno/DankCalculator",
+      "commit": "1db5865419a40a33171a475855a59e0b8bf7187f"
+    },
+    "dockerManager": {
+      "repo": "https://github.com/LuckShiba/DmsDockerManager",
+      "commit": "255f46794b6e3a5f5e842fe1330db3869deddc09"
+    },
+    "wallpaperCarousel": {
+      "repo": "https://github.com/motor-dev/wallpaperCarousel",
+      "commit": "761ecd1b7f347beee9f17909f8334d987c935a1a"
+    }
+  }
+}

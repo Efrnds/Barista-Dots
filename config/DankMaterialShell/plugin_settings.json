@@ -1,0 +1,28 @@
+{
+  "bongoCat": {
+    "enabled": true,
+    "catSizePercent": 100,
+    "catYOffset": 3,
+    "catColorMode": "custom",
+    "catCustomColor": "#ff0000"
+  },
+  "calculator": {
+    "enabled": true,
+    "trigger": "="
+  },
+  "wallpaperCarousel": {
+    "enabled": true,
+    "borderWidth": 3,
+    "itemHeight": 420
+  },
+  "dockerManager": {
+    "enabled": true,
+    "groupByCompose": true
+  },
+  "typingSounds": {
+    "enabled": true,
+    "volume": 106,
+    "mouseEnabled": false,
+    "selectedPackPath": "/home/eduardo/.config/DankMaterialShell/plugins/typingSounds/soundpacks/nk-cream"
+  }
+}

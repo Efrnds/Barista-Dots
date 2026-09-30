@@ -99,7 +99,7 @@ hl.bind("SUPER + CTRL + U", hl.dsp.window.move({ workspace = "e+1" }))
 hl.bind("SUPER + CTRL + I", hl.dsp.window.move({ workspace = "e-1" }))
 
 -- === Workspace Management ===
-hl.bind("CTRL + SHIFT + R", hl.dsp.exec_cmd("dms ipc call workspace-rename open"))
+-- hl.bind("CTRL + SHIFT + R", hl.dsp.exec_cmd("dms ipc call workspace-rename open"))
 
 -- === Move Workspaces ===
 hl.bind("SUPER + SHIFT + Page_Down", hl.dsp.window.move({ workspace = "e+1" }))

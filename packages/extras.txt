@@ -1,6 +1,8 @@
 alacritty
 antigravity-cli
 anydesk-bin
+apple_cursor
+apple_hyprcursor
 awww
 base
 base-devel
@@ -110,7 +112,6 @@ neovim
 networkmanager
 networkmanager-openconnect
 ngrok
-niri
 nmgui-bin
 noto-fonts
 noto-fonts-cjk
