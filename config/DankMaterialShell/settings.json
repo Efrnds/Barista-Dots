@@ -27,7 +27,6 @@
   "workspaceFocusedBorderEnabled": true,
   "workspaceFocusedBorderColor": "custom",
   "appIdSubstitutions": [],
-  "launcherStyle": "spotlight",
   "networkPreference": "ethernet",
   "cursorSettings": {
     "theme": "macOS-hypr",
@@ -144,9 +143,9 @@
       "popupGapsManual": 4,
       "maximizeDetection": true,
       "useOverlayLayer": false,
-      "scrollEnabled": true,
+      "scrollEnabled": false,
       "scrollXBehavior": "column",
-      "scrollYBehavior": "workspace",
+      "scrollYBehavior": "none",
       "shadowIntensity": 0,
       "shadowOpacity": 60,
       "shadowColorMode": "default",
@@ -155,10 +154,49 @@
       "hoverPopouts": true,
       "hoverPopoutDelay": 150,
       "island": true,
-      "islandNotificationExpand": true,
+      "islandNotificationExpand": false,
       "islandSatelliteBackground": true,
       "islandInteractionMode": "hybrid",
-      "islandHomeCompactTight": false
+      "islandHomeCompactTight": false,
+      "islandPalette": "default",
+      "islandMediaClockVisible": true,
+      "islandHighContrast": false,
+      "islandSatellitesEnabled": true,
+      "islandSatelliteGothCorners": true,
+      "islandSatellitePosition": "edges",
+      "islandHomeClockDisplay": "both",
+      "islandHomeLayout": [
+        {
+          "id": "media",
+          "enabled": true
+        },
+        {
+          "id": "clock",
+          "enabled": true
+        },
+        {
+          "id": "weather",
+          "enabled": true
+        },
+        {
+          "id": "status",
+          "enabled": false
+        },
+        {
+          "id": "volume",
+          "enabled": false
+        },
+        {
+          "id": "brightness",
+          "enabled": false
+        },
+        {
+          "id": "notifications",
+          "enabled": true
+        }
+      ],
+      "islandCornerRadius": 64,
+      "islandReducedMotion": false
     }
   ],
   "desktopClockCustomColor": {
