@@ -14,6 +14,28 @@ notify() {
     notify-send "RDP" "$1" >/dev/null 2>&1 || true
 }
 
+# Regrava o conf preservando host/porta/estilo; senha com caracteres especiais via printf %q
+save_rdp_login() {
+    local user="$1" pass="$2"
+    local tmp
+    tmp="$(mktemp "${TMPDIR:-/tmp}/rdp-server.conf.XXXXXX")"
+    cat >"$tmp" <<EOF
+# Configuração do Servidor RDP
+# Usado pelo script Super+R (~/.config/hypr/scripts/rdp-server.sh)
+
+RDP_HOST=$(printf '%q' "$RDP_HOST")
+RDP_PORT=$(printf '%q' "$RDP_PORT")
+RDP_USER=$(printf '%q' "$user")
+RDP_PASS=$(printf '%q' "$pass")
+RDP_AUTO_LOGIN=1
+RDP_LOGIN_STYLE=$(printf '%q' "$RDP_LOGIN_STYLE")
+RDP_SEC=$(printf '%q' "$RDP_SEC")
+EOF
+    chmod 600 "$tmp"
+    mv -f "$tmp" "$CONF"
+    log "login salvo para user=${user}"
+}
+
 if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
     echo "Não use sudo. Roda: ~/.config/hypr/scripts/rdp-server.sh ou Super+R"
     exit 1
@@ -39,6 +61,7 @@ if [[ ! -f "$CONF" ]]; then
     cat > "$CONF" << 'EOF'
 # Configuração do Servidor RDP
 # Usado pelo script Super+R (~/.config/hypr/scripts/rdp-server.sh)
+# Se RDP_PASS estiver vazio, o Super+R pede login e oferece salvar aqui (chmod 600).
 
 RDP_HOST="10.1.10.254"
 RDP_PORT="9299"
@@ -62,6 +85,7 @@ fi
 : "${RDP_SEC:=tls}"
 
 TARGET="${RDP_HOST}:${RDP_PORT}"
+PROMPTED_CREDS=0
 
 # Se usuário ou senha não estiverem definidos e o auto-login estiver ativo, solicita via interface gráfica
 if [[ -z "$RDP_USER" || ( "$RDP_AUTO_LOGIN" == "1" && -z "$RDP_PASS" ) ]]; then
@@ -75,6 +99,21 @@ if [[ -z "$RDP_USER" || ( "$RDP_AUTO_LOGIN" == "1" && -z "$RDP_PASS" ) ]]; then
         INPUT_PASS="${CREDENTIALS#*|}"
         [[ -n "$INPUT_USER" ]] && RDP_USER="$INPUT_USER"
         [[ -n "$INPUT_PASS" ]] && RDP_PASS="$INPUT_PASS"
+        PROMPTED_CREDS=1
+    fi
+fi
+
+# Oferece gravar usuário/senha no conf para não pedir de novo
+if [[ "$PROMPTED_CREDS" -eq 1 && -n "$RDP_USER" && -n "$RDP_PASS" ]]; then
+    if command -v zenity >/dev/null 2>&1; then
+        if zenity --question \
+            --title="RDP - Salvar login" \
+            --text="Salvar usuário e senha para próximos acessos?\n\nArquivo: ${CONF}" \
+            --ok-label="Salvar" \
+            --cancel-label="Não salvar" 2>/dev/null; then
+            save_rdp_login "$RDP_USER" "$RDP_PASS"
+            notify "Login salvo. Próximos Super+R conectam direto."
+        fi
     fi
 fi
 

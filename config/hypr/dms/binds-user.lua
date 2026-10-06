@@ -60,6 +60,7 @@ hl.bind("SUPER + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_network_info.s
 hl.bind("SUPER + ALT + U", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_audio.sh"))
 hl.bind("SUPER + ALT + S", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_ssh.sh"))
 hl.bind("SUPER + ALT + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/mas-trigger.sh"))
+hl.bind("SUPER + ALT + P", hl.dsp.exec_cmd("~/.config/hypr/scripts/menu_printer.sh"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("bash " .. home .. "/.config/hypr/scripts/rdp-server.sh"))
 
 -- Scratchpads / toggles

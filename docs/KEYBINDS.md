@@ -65,7 +65,8 @@ Atalhos do stack **Hyprland 0.56 + DMS**, com overrides em `config/hypr/dms/bind
 | `Super+I` | Info de rede |
 | `Super+Alt+U` | Menu áudio |
 | `Super+Alt+S` | Menu SSH |
-| `Super+R` | RDP server |
+| `Super+Alt+P` | Wizard de impressora |
+| `Super+R` | RDP server (oferece salvar login) |
 
 ---
 

@@ -3,6 +3,7 @@ antigravity-cli
 anydesk-bin
 apple_cursor
 apple_hyprcursor
+avahi
 awww
 base
 base-devel
@@ -224,5 +225,6 @@ ydotool
 yt-dlp
 zathura
 zen-browser-bin
+zenity
 zram-generator
 zsh
