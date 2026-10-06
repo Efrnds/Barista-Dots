@@ -110,6 +110,24 @@ Depois rode:
 
 ---
 
+## Wallpapers (opcional)
+
+O pack grande fica no repo [barista-wallpapers](https://github.com/Efrnds/barista-wallpapers) (~1–2 GB). One-liner:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Efrnds/Barista-Dots/main/fetch-wallpapers.sh)"
+```
+
+Ou, com o repo já clonado:
+
+```bash
+~/dotfiles/fetch-wallpapers.sh
+```
+
+Destino padrão: `~/Imagens/wallpapers` (override: `BARISTA_WALLPAPERS_DIR=...`). Depois aponte o DMS → Wallpaper para essa pasta.
+
+---
+
 ## Scripts
 
 | Script | Função |
@@ -119,6 +137,7 @@ Depois rode:
 | `update.sh` | `git pull` + `apply.sh` + session manager + `doctor.sh` |
 | `install.sh` | Máquina nova: pacotes + apply + Ly |
 | `setup.sh` | Clone + install (one-liner) |
+| `fetch-wallpapers.sh` | Baixa/atualiza pack de wallpapers (repo separado) |
 | `doctor.sh` | Diagnóstico do stack (binários, Ly, Foot, binds) |
 | `tests/smoke.sh` | Smoke tests pós install/apply (CI/local) |
 
@@ -160,4 +179,4 @@ cd ~/dotfiles && git add -A && git commit -m "sync configs" && git push
 | `systemd/user/` | `~/.config/systemd/user/` |
 | `home/.zshrc`, etc. | `~/` |
 
-**Não versionado:** wallpapers grandes, secrets, `~/.config/dotfiles/user.conf`, backups DMS.
+**Não versionado aqui:** wallpapers grandes ([barista-wallpapers](https://github.com/Efrnds/barista-wallpapers)), secrets, `~/.config/dotfiles/user.conf`, backups DMS.
