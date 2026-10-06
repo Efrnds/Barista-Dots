@@ -4,8 +4,8 @@
 # ==============================================================================
 set -e
 
-PROMPT_MAKER_DIR="/home/eduardo/Documents/Projetos/prompt-maker"
-PROJ_ROOT="/home/eduardo/Documents/Projetos"
+PROMPT_MAKER_DIR="${PROMPT_MAKER_DIR:-$HOME/Documents/Projetos/prompt-maker}"
+PROJ_ROOT="${PROJ_ROOT:-$HOME/Documents/Projetos}"
 PORT="8787"
 API_URL="http://127.0.0.1:${PORT}"
 

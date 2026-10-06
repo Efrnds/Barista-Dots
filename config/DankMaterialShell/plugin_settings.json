@@ -23,6 +23,6 @@
     "enabled": true,
     "volume": 106,
     "mouseEnabled": false,
-    "selectedPackPath": "/home/eduardo/.config/DankMaterialShell/plugins/typingSounds/soundpacks/nk-cream"
+    "selectedPackPath": "~/.config/DankMaterialShell/plugins/typingSounds/soundpacks/nk-cream"
   }
 }
