@@ -74,6 +74,7 @@ EOF
     chmod 600 "$CONF"
 fi
 
+# shellcheck source=/dev/null
 [[ -f "$CONF" ]] && source "$CONF"
 
 : "${RDP_HOST:=10.1.10.254}"
