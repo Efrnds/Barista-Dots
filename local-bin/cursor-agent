@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Wrapper: Node 24+ utf8 execFile breaks binary clipboard (Ctrl+V → [Image #N]).
+set -euo pipefail
+PRELOAD="${XDG_CONFIG_HOME:-$HOME/.config}/cursor-agent/execfile-buffer-preload.js"
+if [[ -f "$PRELOAD" ]]; then
+  case " ${NODE_OPTIONS:-} " in
+    *" --require ${PRELOAD} "*|*" --require=${PRELOAD} "*) ;;
+    *) export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--require ${PRELOAD}" ;;
+  esac
+fi
+exec /opt/cursor-agent/cursor-agent "$@"

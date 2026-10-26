@@ -9,6 +9,11 @@ config/hypr/current_wallpaper.mp4
 config/hypr/current_wallpaper.webp
 config/hypr/avatar.jpg
 config/hypr/.dms-backups/
+*.pre-dotfiles-*
+
+# Pack de wallpapers (baixar via fetch-wallpapers.sh / barista-wallpapers)
+wallpapers/*
+!wallpapers/README.md
 
 # DMS — estado local da primeira execução
 config/DankMaterialShell/.firstlaunch

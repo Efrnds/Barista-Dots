@@ -14,35 +14,37 @@ check() {
   fi
 }
 
-echo "=== smoke.sh ==="
+echo "=== smoke.sh (niri stack) ==="
 
-for cmd in hyprland foot tmux dms; do
+for cmd in niri alacritty tmux dms thunar; do
   check command -v "$cmd"
 done
 check pacman -Qi ly
+check pacman -Qi dms-shell
 
-check test -f "$HOME/.config/hypr/hyprland.lua"
-check test -x "$HOME/.local/bin/foot-tmux.sh"
-check test -f "$HOME/.config/foot/foot.ini"
-check grep -q "^shell=$HOME" "$HOME/.config/foot/foot.ini"
+check test -f "$HOME/.config/niri/config.kdl"
+check test -x "$HOME/.local/bin/alacritty-tmux.sh"
+check test -f "$HOME/.config/alacritty/alacritty.toml"
+check grep -q "alacritty-tmux" "$HOME/.config/alacritty/alacritty.toml"
 check test -f "$HOME/.config/dotfiles/user.conf"
 check test -x "$DOTFILES/doctor.sh"
+check test -x "$DOTFILES/migrate-stack.sh"
 check test -x "$DOTFILES/hooks/render-config.sh"
-check test -f "$DOTFILES/templates/foot.ini.in"
+check test -f "$DOTFILES/templates/alacritty.toml.in"
+check test -d "$HOME/.config/scripts"
 
 if systemctl is-enabled ly@tty1.service &>/dev/null; then
   check systemctl is-enabled ly@tty1.service
 else
-  echo "[skip] ly@tty1 (rode setup-session.sh como sudo)"
+  echo "[skip] ly@tty1 (rode setup-session.sh)"
 fi
 
-if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] && command -v hyprctl >/dev/null 2>&1; then
-  check hyprctl version
-  check test -x "$HOME/.config/hypr/scripts/launch_terminal.sh"
+if command -v niri >/dev/null 2>&1; then
+  check niri validate -c "$HOME/.config/niri/config.kdl"
 fi
 
 if ! rg -q '/home/eduardo' "$DOTFILES/config" "$DOTFILES/templates" \
-  -g '!config/foot/foot.ini' -g '!config/spicetify/config-xpui.ini' 2>/dev/null; then
+  -g '!config/alacritty/alacritty.toml' -g '!config/spicetify/config-xpui.ini' 2>/dev/null; then
   echo "[ok] sem paths hardcoded /home/eduardo"
 else
   echo "[FAIL] paths hardcoded encontrados"

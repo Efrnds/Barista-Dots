@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Valida pré-requisitos do Ly/PAM e stack Barista Dots.
+# Valida pré-requisitos do Ly/PAM e stack Barista Dots (niri).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -28,16 +28,16 @@ else
   ok "shell $USER_SHELL"
 fi
 
-if [[ ! -x /usr/bin/start-hyprland ]]; then
-  fail "start-hyprland ausente — instale dms-shell-hyprland"
+if [[ ! -x /usr/bin/niri-session ]]; then
+  fail "niri-session ausente — instale niri"
 else
-  ok "start-hyprland"
+  ok "niri-session"
 fi
 
-if [[ ! -f "$HOME/.config/hypr/hyprland.lua" ]]; then
-  fail "hyprland.lua ausente — rode ~/dotfiles/apply.sh"
+if [[ ! -f "$HOME/.config/niri/config.kdl" ]]; then
+  fail "niri config.kdl ausente — rode ~/dotfiles/apply.sh"
 else
-  ok "hyprland.lua"
+  ok "niri config.kdl"
 fi
 
 if ! pacman -Qi ly &>/dev/null; then
@@ -52,19 +52,16 @@ else
   fi
 fi
 
-FOOT_SHELL="$(grep -E '^shell=' "$HOME/.config/foot/foot.ini" 2>/dev/null | cut -d= -f2- || true)"
-if [[ -n "$FOOT_SHELL" && -x "$FOOT_SHELL" ]]; then
-  ok "foot shell executável ($FOOT_SHELL)"
-elif [[ -n "$FOOT_SHELL" ]]; then
-  fail "foot shell não executável: $FOOT_SHELL"
+if [[ -f "$HOME/.config/alacritty/alacritty.toml" ]]; then
+  ok "alacritty.toml"
 else
-  warn "foot.ini shell não encontrado — rode apply.sh"
+  fail "alacritty.toml ausente — rode apply.sh"
 fi
 
-if [[ -x "$HOME/.local/bin/foot-tmux.sh" ]]; then
-  ok "foot-tmux.sh"
+if [[ -x "$HOME/.local/bin/alacritty-tmux.sh" ]]; then
+  ok "alacritty-tmux.sh"
 else
-  fail "foot-tmux.sh ausente em ~/.local/bin"
+  fail "alacritty-tmux.sh ausente em ~/.local/bin"
 fi
 
 if command -v dms >/dev/null 2>&1; then
@@ -73,10 +70,11 @@ else
   fail "dms não encontrado"
 fi
 
-if command -v "$HOME/.config/hypr/scripts/launch_terminal.sh" &>/dev/null; then
+if [[ -x "$HOME/.config/scripts/launch_terminal.sh" ]]; then
   ok "launch_terminal.sh"
 fi
 
+if command -v thunar &>/dev/null; then ok "thunar"; else warn "thunar ausente"; fi
 if command -v zen-browser &>/dev/null; then ok "zen-browser"; else warn "zen-browser ausente (opcional)"; fi
 if [[ -x "${HOME}/Applications/cursor.AppImage" ]]; then ok "cursor AppImage"; else warn "cursor AppImage ausente (opcional)"; fi
 

@@ -1,0 +1,8 @@
+[Unit]
+Description=Sync DMS theme to greetd greeter
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+Environment=DMS_PRIVESC=sudo
+ExecStart=/usr/bin/dms-greeter sync

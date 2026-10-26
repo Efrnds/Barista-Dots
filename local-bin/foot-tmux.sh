@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Foot default shell: attach/create tmux session (default: main).
-SESSION="${FOOT_TMUX_SESSION:-${1:-main}}"
-export TMUX=
-exec tmux new-session -A -s "$SESSION"
+# Foot direto (sem tmux). Tmux+extended-keys quebrava Ctrl+V → imagem no agent.
+# Se quiser tmux: `tmux` dentro do foot, com ~/.config/tmux/tmux.conf (sem extended-keys).
+set -euo pipefail
+exec foot "$@"

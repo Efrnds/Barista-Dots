@@ -1,0 +1,45 @@
+# Gerado por hooks/render-config.sh — não editar alacritty.toml direto no repo
+[general]
+import = ["/home/eduardo/.config/alacritty/colors.toml"]
+
+[env]
+TERM = "alacritty"
+
+[window]
+padding = { x = 15, y = 15 }
+dynamic_padding = true
+decorations = "None"
+opacity = 1.0
+
+[font]
+size = 9.3
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+
+[scrolling]
+history = 10000
+
+[terminal]
+# Sem tmux automático — tmux engolia Ctrl+V do cursor-agent (colar imagem).
+# Se quiser tmux: rode `tmux` dentro do terminal.
+shell = { program = "/usr/bin/zsh", args = ["-l"] }
+
+# Ctrl+V → app (imagem no agent). Ctrl+Shift+V → cola texto.
+[keyboard]
+bindings = [
+  { key = "V", mods = "Control", action = "ReceiveChar" },
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+]

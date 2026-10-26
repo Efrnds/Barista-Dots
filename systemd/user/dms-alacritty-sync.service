@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync Alacritty colors from DMS palette
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/scripts/sync-alacritty-theme-dms.sh

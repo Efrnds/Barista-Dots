@@ -1,174 +1,84 @@
-# Keybinds — Barista Dots
+# Keybinds — Barista Dots (niri + DMS)
 
-Atalhos do stack **Hyprland 0.56 + DMS**, com overrides em `config/hypr/dms/binds-user.lua` (carregado **depois** dos defaults DMS em `binds.lua`).
-
-**Toggle binds:** `Super+Shift+C` — desliga/liga atalhos Hypr via DMS (`toggleBinds`). Se nada responder, rode `dms ipc call hypr openBinds`.
+Atalhos em `config/niri/config.kdl`. Painéis DMS via `dms ipc`.
 
 ---
 
-## Essenciais (user)
+## Essenciais
 
 | Atalho | Ação |
 |--------|------|
-| `Super+T` | Terminal (`launch_terminal.sh` → Foot + tmux) |
-| `Super+Space` | Launcher DMS spotlight |
-| `Super+B` | Browser (`toggle_zen_browser.sh`) |
-| `Super+C` | Editor (`launch_cursor.sh`) |
-| `Super+E` | yazi no Foot |
+| `Super+T` | Terminal (Alacritty + tmux) |
+| `Super+Space` | Spotlight DMS |
+| `Super+Alt+Space` | **Menu Barista** (Setup/Update/…) |
+| `Super+B` | Browser |
+| `Super+C` | Cursor |
+| `Super+E` | Thunar |
 | `Super+Escape` | Powermenu DMS |
-| `Super+Shift+C` | Toggle binds Hypr |
+| `Super+O` | Overview niri |
+| `Super+Q` | Fecha janela |
+| `Super+Shift+Q` | Sair do niri |
 
 ---
 
-## DMS / painéis (user)
+## Omarchy-inspired
+
+| Atalho | Ação |
+|--------|------|
+| `Super+Alt+Space` | Menu unificado (Setup, Update, VPN, layouts…) |
+| `Super+Ctrl+S` | Salvar layout de janelas |
+| `Super+Ctrl+Shift+S` | Restaurar layout |
+| `Super+Ctrl+R` | Novo lembrete |
+| `Super+Ctrl+=` | Escala de texto global |
+| `Super+Alt+A` | Coding agent / diagnóstico |
+| `Super+Alt+T` | Toggle Cloudflare WARP |
+| Lid close/open | Clamshell (eDP off se houver externo) |
+
+---
+
+## DMS / painéis
 
 | Atalho | Ação |
 |--------|------|
 | `Super+A` | Control center |
-| `Super+Alt+V` | Control center |
-| `Super+Alt+D` | Dash DMS |
-| `Super+Shift+P` | Settings DMS |
+| `Super+Alt+D` | Dash |
+| `Super+Shift+P` | Settings |
+| `Super+N` | Notificações |
+| `Super+Shift+/` | Keybinds DMS |
+| `Super+L` | Lock |
 
 ---
 
-## Janelas (user)
+## Janelas (niri)
 
 | Atalho | Ação |
 |--------|------|
 | `Super+V` | Toggle float |
-| `Super+Ctrl+←/→/↑/↓` | Redimensionar janela (repeat) |
+| `Super+F` | Maximize column |
+| `Super+Shift+F` | Fullscreen |
+| `Super+H/J/K` + setas | Foco |
+| `Super+Ctrl+H/J/K/L` | Mover coluna/janela |
+| `Super+1..0` | Workspace |
+| `Super+Ctrl+1..0` | Mover para workspace |
+| `-` / `=` (com Super) | Largura da coluna |
 
 ---
 
-## Wallpapers (user)
+## Wallpapers / menus
 
 | Atalho | Ação |
 |--------|------|
 | `Super+W` | Próximo wallpaper |
 | `Super+Shift+W` | Dash wallpaper |
-| `Super+Alt+W` | Browse wallpaper |
-| `Super+Ctrl+W` | Menu wallpapers |
-| `Super+Shift+T` | Menu wallpapers |
-
----
-
-## Menus e scripts (user)
-
-| Atalho | Ação |
-|--------|------|
-| `Super+.` | Emoji picker |
-| `Super+F1` | Cheat-sheet Hypr + tmux (picker) |
-| `Super+S` | Localizar arquivo |
 | `Super+G` | Menu apps |
-| `Super+Shift+E` | Editar configs |
-| `Super+Alt+Y` | Menu VPN |
-| `Super+I` | Info de rede |
-| `Super+Alt+U` | Menu áudio |
-| `Super+Alt+S` | Menu SSH |
-| `Super+Alt+P` | Wizard de impressora |
-| `Super+R` | RDP server (oferece salvar login) |
+| `Super+S` | Locate |
+| `Super+M` | Spotifast |
+| `Super+P` | Super Productivity |
+| `Super+Alt+G` | Game mode |
+| `Super+Shift+S` | Screenshot → swappy |
 
 ---
 
-## Apps / scratchpads (user)
+## tmux (dentro do Alacritty)
 
-| Atalho | Ação |
-|--------|------|
-| `Super+M` | Toggle Spotify |
-| `Super+P` | Toggle Super Productivity |
-
----
-
-## Sessão / lock (user)
-
-| Atalho | Ação |
-|--------|------|
-| `Super+L` | Lock (`loginctl lock-session`) |
-| `Super+Shift+M` | Sair da sessão |
-| `Lid Switch (on)` | Lock (locked bind) |
-
----
-
-## Screenshots (user)
-
-| Atalho | Ação |
-|--------|------|
-| `Super+Shift+S` | Área → swappy |
-| `Print` | Área → clipboard |
-| `Shift+Print` | Tela inteira → arquivo |
-| `Ctrl+Print` | Área → arquivo |
-
----
-
-## Workspaces (user + DMS)
-
-| Atalho | Ação |
-|--------|------|
-| `Super+0` | Workspace 10 (user) |
-| `Super+Shift+0` | Mover janela → workspace 10 (user) |
-| `Super+1` … `Super+9` | Focar workspace (DMS) |
-| `Super+Shift+1` … `Super+Shift+9` | Mover janela (DMS) |
-| `Super+Page Up/Down` | Workspace anterior/próximo (DMS) |
-| `Super+U` / `Super+I` | Workspace e+1 / e-1 (DMS) |
-
----
-
-## Utilitários (user)
-
-| Atalho | Ação |
-|--------|------|
-| `Ctrl+Shift+Escape` | btop float (Foot) |
-
----
-
-## DMS defaults (ainda ativos)
-
-Estes vêm de `binds.lua` e **não** foram substituídos em `binds-user.lua`:
-
-| Atalho | Ação |
-|--------|------|
-| `Alt+Space` | Spotlight bar |
-| `Super+N` | Notificações |
-| `Super+Tab` / `Super+O` | Overview |
-| `Super+Q` | Fechar janela |
-| `Super+F` | Maximize toggle |
-| `Super+Shift+F` | Fullscreen toggle |
-| `Super+←/↓/↑/→` | Focar direção |
-| `Super+Shift+←/↓/↑/→` | Mover janela |
-| `Super+Ctrl+←/→` | Monitor anterior/próximo |
-| `Super+Alt+L` | Lock DMS |
-| `XF86Audio*` | Volume / mute / mídia (DMS) |
-| `XF86MonBrightness*` | Brilho (DMS) |
-
-| `Super+Shift+/` | Painel DMS de keybinds |
-
----
-
-## tmux (prefixo `Ctrl+b`)
-
-Prefixo padrão: **`Ctrl+b`**. Ajuda: `prefix + ?`.
-
-| Atalho | Ação |
-|--------|------|
-| `Ctrl+b` `|` | Split horizontal (cwd atual) |
-| `Ctrl+b` `-` | Split vertical (cwd atual) |
-| `Ctrl+b` `h/j/k/l` | Navegar panes (vim) |
-| `Ctrl+b` `z` | Zoom pane |
-| `Ctrl+b` `x` | Fechar pane (confirma) |
-| `Ctrl+b` `c` | Nova janela |
-| `Ctrl+b` `d` | Detach |
-| `Ctrl+b` `R` | Recarregar `tmux.conf` |
-| `Ctrl+b` `Ctrl+s` | Salvar sessão (resurrect) |
-| `Ctrl+b` `Ctrl+r` | Restaurar sessão (resurrect) |
-
-Sessões Foot: `main`, `dev` (`foot-tmux-dev.sh`), `ssh` (`foot-tmux-ssh.sh`). Mouse habilitado. Status bar: workspace Hyprland + cwd.
-
-Para trocar prefixo para `Ctrl+a`, descomente as linhas em `config/tmux/tmux.conf`.
-
----
-
-## Customizar
-
-- **Hypr:** edite `config/hypr/dms/binds-user.lua` no repo (ou importe com `import.sh`)
-- **Apps (Super+T/C/B/E):** `~/.config/dotfiles/user.conf` + `apply.sh`
-- **tmux:** `config/tmux/tmux.conf`
+Prefixo: `Ctrl+b` — ver `config/tmux/tmux.conf`.

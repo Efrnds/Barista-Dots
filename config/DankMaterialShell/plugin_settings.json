@@ -16,13 +16,25 @@
     "itemHeight": 420
   },
   "dockerManager": {
-    "enabled": true,
-    "groupByCompose": true
+    "enabled": false,
+    "groupByCompose": false
   },
   "typingSounds": {
     "enabled": true,
     "volume": 106,
     "mouseEnabled": false,
     "selectedPackPath": "~/.config/DankMaterialShell/plugins/typingSounds/soundpacks/nk-cream"
+  },
+  "rtkStatus": {
+    "enabled": false
+  },
+  "obsRec": {
+    "enabled": false
+  },
+  "freelaTimer": {
+    "enabled": false
+  },
+  "baristaHub": {
+    "enabled": true
   }
 }

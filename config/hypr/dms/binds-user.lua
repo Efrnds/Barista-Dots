@@ -66,6 +66,15 @@ hl.bind("SUPER + R", hl.dsp.exec_cmd("bash " .. home .. "/.config/hypr/scripts/r
 -- Scratchpads / toggles
 hl.bind("SUPER + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/toggle_spotify.sh"))
 hl.bind("SUPER + P", hl.dsp.exec_cmd("~/.config/hypr/scripts/toggle_superproductivity.sh"))
+hl.bind("SUPER + ALT + G", hl.dsp.exec_cmd("~/.config/hypr/scripts/toggle_game_mode.sh"))
+
+-- OBS scene router (Hyprland → WebSocket)
+local obsRouter = home .. "/.config/hypr/scripts/obs-scene-router/obs-scene-router.sh"
+hl.bind("SUPER + ALT + O", hl.dsp.exec_cmd(obsRouter .. " toggle-pause"))
+hl.bind("SUPER + ALT + 1", hl.dsp.exec_cmd(obsRouter .. " force 'Já vai começar'"))
+hl.bind("SUPER + ALT + 2", hl.dsp.exec_cmd(obsRouter .. " go-live"))
+hl.bind("SUPER + ALT + 5", hl.dsp.exec_cmd(obsRouter .. " force 'Fim'"))
+hl.bind("SUPER + ALT + 0", hl.dsp.exec_cmd(obsRouter .. " clear-force"))
 
 -- Session / lock
 hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session"))

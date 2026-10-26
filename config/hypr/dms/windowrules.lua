@@ -17,10 +17,10 @@ hl.window_rule({ match = { class = "^(org.kde.polkit-kde-authentication-agent-1)
 hl.window_rule({ match = { class = "^(thunar)$", title = "^(Progresso da Operação de Arquivo|File Operation Progress)$" }, float = true })
 
 -- DMS-RULE: id=dms_rule_5, name=
-hl.window_rule({ match = { class = "^(spotify|Spotify)$" }, float = true })
+hl.window_rule({ match = { class = "^(spotifast|Spotifast)$" }, float = true })
 
 -- DMS-RULE: id=dms_rule_6, name=
-hl.window_rule({ match = { class = "^(spotify|Spotify)$" }, workspace = "special:spotify" })
+hl.window_rule({ match = { class = "^(spotifast|Spotifast)$" }, workspace = "special:spotifast" })
 
 -- DMS-RULE: id=dms_rule_7, name=
 hl.window_rule({ match = { class = "^([Ss]uper[ -]?[Pp]roductivity)$" }, float = true })

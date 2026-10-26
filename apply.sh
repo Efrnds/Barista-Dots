@@ -52,23 +52,45 @@ chmod +x "$DOTFILES/hooks/render-config.sh"
 mkdir -p "$HOME/.config" "$HOME/.local/bin"
 
 CONFIG_DIRS=(
-  hypr
-  foot
+  niri
+  alacritty
+  scripts
   tmux
   DankMaterialShell
   nvim
-  yazi
   btop
   cava
   fastfetch
   spicetify
+  autostart
+  Thunar
 )
 
 for dir in "${CONFIG_DIRS[@]}"; do
   link_path "$DOTFILES/config/$dir" "$HOME/.config/$dir"
 done
 
+# Mantém wallpaper legado se existir (DMS pode referenciar)
+if [[ -d "$DOTFILES/config/hypr" ]]; then
+  mkdir -p "$HOME/.config/hypr"
+  for f in current_wallpaper.jpg current_wallpaper.mp4 avatar.jpg; do
+    [[ -e "$DOTFILES/config/hypr/$f" ]] && link_file "$DOTFILES/config/hypr/$f" "$HOME/.config/hypr/$f"
+  done
+fi
+
 link_file "$DOTFILES/config/starship.toml" "$HOME/.config/starship.toml"
+
+if [[ -d "$DOTFILES/config/environment.d" ]]; then
+  mkdir -p "$HOME/.config/environment.d"
+  for f in "$DOTFILES/config/environment.d/"*; do
+    [[ -f "$f" ]] || continue
+    link_file "$f" "$HOME/.config/environment.d/$(basename "$f")"
+  done
+fi
+
+if [[ -d "$DOTFILES/config/fontconfig" ]]; then
+  link_path "$DOTFILES/config/fontconfig" "$HOME/.config/fontconfig"
+fi
 
 mkdir -p "$HOME/.config/systemd/user"
 if [[ -d "$DOTFILES/systemd/user" ]]; then
@@ -96,7 +118,7 @@ if [[ -d "$DOTFILES/wallpapers" ]]; then
 fi
 
 install_git_hooks
-chmod +x "$DOTFILES/apply.sh" "$DOTFILES/import.sh" "$DOTFILES/install.sh" "$DOTFILES/update.sh" "$DOTFILES/doctor.sh" 2>/dev/null || true
+chmod +x "$DOTFILES/apply.sh" "$DOTFILES/import.sh" "$DOTFILES/install.sh" "$DOTFILES/update.sh" "$DOTFILES/doctor.sh" "$DOTFILES/migrate-stack.sh" 2>/dev/null || true
 chmod +x "$DOTFILES/hooks/"*.sh 2>/dev/null || true
 chmod +x "$DOTFILES/tests/"*.sh 2>/dev/null || true
 

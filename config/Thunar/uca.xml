@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Abrir terminal aqui</name>
+	<submenu></submenu>
+	<unique-id>1782427055026695-1</unique-id>
+	<command>alacritty --working-directory %f</command>
+	<description>Abre Alacritty neste diretório</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>code</icon>
+	<name>Abrir no Cursor</name>
+	<submenu></submenu>
+	<unique-id>1782427055026695-2</unique-id>
+	<command>cursor %f</command>
+	<description>Abre a pasta/arquivo no Cursor</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+	<other-files/>
+	<audio-files/>
+	<image-files/>
+	<text-files/>
+</action>
+<action>
+	<icon>folder-copy</icon>
+	<name>Copiar caminho</name>
+	<submenu></submenu>
+	<unique-id>1782427055026695-3</unique-id>
+	<command>echo -n %f | wl-copy</command>
+	<description>Copia o caminho para o clipboard</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+	<other-files/>
+	<audio-files/>
+	<image-files/>
+	<text-files/>
+</action>
+</actions>

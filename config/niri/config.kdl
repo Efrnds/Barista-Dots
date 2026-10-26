@@ -1,0 +1,286 @@
+// Barista Dots — niri + DankMaterialShell
+// Docs: https://niri-wm.github.io/niri/Configuration:-Introduction
+
+input {
+    keyboard {
+        xkb {
+            // Lenovo ThinkPad BR: a tecla ? ao lado do AltGr/PrtSc
+            // chega como <RCTL>; variant thinkpad remapeia pra / ?
+            layout "br"
+            variant "thinkpad"
+            model "abnt2"
+            options "grp:alt_shift_toggle"
+        }
+        numlock
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+    }
+
+    mouse {}
+    trackpoint {}
+
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+// Outputs: leave automatic so monitors sit adjacent (sem gap = mouse passa).
+// Ajuste fino no DMS Settings → Displays se precisar.
+
+// Cores de borda/focus-ring/tabs: sync automático com o tema DMS (matugen)
+include "dms/colors.kdl"
+
+layout {
+    gaps 6
+
+    center-focused-column "never"
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    // Janela nova ocupa a largura que o app pedir (menos "metade bugada")
+    default-column-width {}
+
+    // width só — cores vêm de dms/colors.kdl
+    focus-ring {
+        width 2
+    }
+
+    border {
+        width 1
+    }
+
+    struts {
+        left 0
+        right 0
+        top 0
+        bottom 0
+    }
+}
+
+// Ícones Qt/Quickshell + menu apps (DMS doctor)
+environment {
+    QT_QPA_PLATFORMTHEME "qt6ct"
+    GTK_THEME "adw-gtk3-dark"
+    XCURSOR_THEME "macOS-hypr"
+    XDG_MENU_PREFIX "plasma-"
+}
+
+// DMS sobe via systemd user (dms.service) — evita double-start
+spawn-at-startup "xwayland-satellite"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+prefer-no-csd
+
+// Scratchpad (toggle via Mod+Shift+Return/N/M)
+workspace "scratch"
+
+// Cantos arredondados no estilo DMS (rounding ~20)
+window-rule {
+    geometry-corner-radius 16
+    clip-to-geometry true
+}
+
+window-rule {
+    match app-id=r#"^scratch-term$"#
+    open-floating true
+    default-column-width { proportion 0.55; }
+}
+
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    match app-id=r#"^zen$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"^btop-float$"#
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"^com\.danklinux\.dms$"#
+    open-floating true
+}
+
+binds {
+    // === DMS / shell ===
+    Mod+Escape allow-inhibiting=false hotkey-overlay-title="Powermenu" { spawn-sh "dms ipc call powermenu toggle"; }
+    Mod+A hotkey-overlay-title="Control Center" { spawn-sh "dms ipc call control-center toggle"; }
+    Mod+Alt+V { spawn-sh "dms ipc call control-center toggle"; }
+    Mod+Alt+D { spawn-sh "dms ipc call dash toggle"; }
+    Mod+Shift+P hotkey-overlay-title="DMS Settings" { spawn-sh "dms ipc call settings toggle"; }
+    Mod+Shift+Slash hotkey-overlay-title="Keybinds" { spawn-sh "dms ipc call keybinds toggle niri"; }
+    Mod+Space hotkey-overlay-title="Spotlight" { spawn-sh "dms ipc call spotlight toggle"; }
+    Mod+Alt+Space hotkey-overlay-title="Barista menu" { spawn-sh "~/.config/scripts/barista-menu.sh"; }
+    Mod+Alt+Shift+A hotkey-overlay-title="Apps padrão" { spawn-sh "~/.config/scripts/default-apps-menu.sh"; }
+    Mod+N { spawn-sh "dms ipc call notifications toggle"; }
+    Mod+Alt+L allow-when-locked=true hotkey-overlay-title="Lock" { spawn-sh "dms ipc call lock lock"; }
+    Mod+L allow-when-locked=true { spawn-sh "loginctl lock-session"; }
+
+    // Omarchy-inspired
+    Mod+Ctrl+S hotkey-overlay-title="Salvar layout" { spawn-sh "~/.config/scripts/layout-save.sh"; }
+    Mod+Ctrl+R hotkey-overlay-title="Lembrete" { spawn-sh "~/.config/scripts/reminders.sh"; }
+    Mod+Ctrl+Shift+S hotkey-overlay-title="Restaurar layout" { spawn-sh "~/.config/scripts/layout-restore.sh"; }
+    Mod+Ctrl+Shift+C hotkey-overlay-title="Layout coding" { spawn-sh "~/.config/scripts/layout-context.sh coding"; }
+    Mod+Ctrl+Shift+B hotkey-overlay-title="Layout browse" { spawn-sh "~/.config/scripts/layout-context.sh browse"; }
+    Mod+Ctrl+Alt+C hotkey-overlay-title="Salvar layout coding" { spawn-sh "~/.config/scripts/layout-context.sh save-coding"; }
+    Mod+Ctrl+Alt+B hotkey-overlay-title="Salvar layout browse" { spawn-sh "~/.config/scripts/layout-context.sh save-browse"; }
+    Mod+Ctrl+Equal hotkey-overlay-title="Escala texto" { spawn-sh "~/.config/scripts/text-scale.sh"; }
+    Mod+Alt+A hotkey-overlay-title="Coding agent" { spawn-sh "~/.config/scripts/agent-launch.sh"; }
+    Mod+Alt+T hotkey-overlay-title="WARP toggle" { spawn-sh "~/.config/scripts/warp-toggle.sh"; }
+
+    // === Apps ===
+    Mod+T hotkey-overlay-title="Terminal" { spawn-sh "~/.config/scripts/launch_terminal.sh"; }
+    Mod+C hotkey-overlay-title="Cursor" { spawn-sh "~/.config/scripts/launch_cursor.sh"; }
+    Mod+B hotkey-overlay-title="Browser" { spawn-sh "~/.config/scripts/toggle_zen_browser.sh"; }
+    Mod+E hotkey-overlay-title="Thunar" { spawn "thunar"; }
+    Mod+V { toggle-window-floating; }
+    Mod+Shift+V hotkey-overlay-title="Clipboard history" { spawn-sh "dms ipc call clipboard toggle"; }
+
+    // Wallpapers
+    Mod+W { spawn-sh "dms ipc call wallpaper next"; }
+    Mod+Shift+W { spawn-sh "dms ipc call dankdash wallpaper"; }
+    Mod+Alt+W { spawn-sh "dms ipc call file browse wallpaper"; }
+    Mod+Ctrl+W { spawn-sh "~/.config/scripts/menu_wallpapers.sh"; }
+    Mod+Shift+T { spawn-sh "~/.config/scripts/menu_wallpapers.sh"; }
+
+    // Menus / scripts
+    Mod+Shift+Period { spawn-sh "~/.config/scripts/emoji.sh"; }
+    F1 { spawn-sh "~/.config/scripts/keybinds.sh"; }
+    Mod+S { spawn-sh "~/.config/scripts/menu_locate.sh"; }
+    Mod+G { spawn-sh "~/.config/scripts/menu_apps.sh"; }
+    Mod+Shift+E { spawn-sh "~/.config/scripts/edit_configs.sh"; }
+    Mod+Alt+Y { spawn-sh "~/.config/scripts/menu_vpn.sh"; }
+    Mod+Alt+I { spawn-sh "~/.config/scripts/menu_network_info.sh"; }
+    Mod+Alt+U { spawn-sh "~/.config/scripts/menu_audio.sh"; }
+    Mod+Alt+S { spawn-sh "~/.config/scripts/menu_ssh.sh"; }
+    Mod+Alt+M { spawn-sh "~/.config/scripts/mas-trigger.sh"; }
+    Mod+Alt+P { spawn-sh "~/.config/scripts/menu_printer.sh"; }
+    Mod+R { spawn-sh "bash ~/.config/scripts/rdp-server.sh"; }
+
+    // Scratchpads / toggles
+    Mod+M { spawn-sh "~/.config/scripts/toggle_spotify.sh"; }
+    Mod+P { spawn-sh "~/.config/scripts/toggle_superproductivity.sh"; }
+    Mod+Alt+G { spawn-sh "~/.config/scripts/toggle_game_mode.sh"; }
+
+    // OBS scene router
+    Mod+Alt+O { spawn-sh "~/.config/scripts/obs-scene-router/obs-scene-router.sh toggle-pause"; }
+    Mod+Alt+1 { spawn-sh "~/.config/scripts/obs-scene-router/obs-scene-router.sh force 'Já vai começar'"; }
+    Mod+Alt+2 { spawn-sh "~/.config/scripts/obs-scene-router/obs-scene-router.sh go-live"; }
+    Mod+Alt+5 { spawn-sh "~/.config/scripts/obs-scene-router/obs-scene-router.sh force 'Fim'"; }
+    Mod+Alt+0 { spawn-sh "~/.config/scripts/obs-scene-router/obs-scene-router.sh clear-force"; }
+
+    // Scratchpad
+    Mod+Shift+Return hotkey-overlay-title="Scratch term" { spawn-sh "~/.config/scripts/scratchpad.sh term"; }
+    Mod+Shift+N hotkey-overlay-title="Scratch notes" { spawn-sh "~/.config/scripts/scratchpad.sh notes"; }
+    Mod+Shift+M hotkey-overlay-title="Scratch music" { spawn-sh "~/.config/scripts/scratchpad.sh music"; }
+
+    // Session
+    Mod+Shift+Q { quit; }
+    Ctrl+Alt+Delete { spawn-sh "dms ipc call processlist focusOrToggle"; }
+
+    // Screenshots via DMS — sempre clipboard (image/png)
+    Mod+Shift+S { spawn-sh "~/.config/scripts/screenshot.sh region"; }
+    Print { spawn-sh "~/.config/scripts/screenshot.sh region"; }
+    Shift+Print { spawn-sh "~/.config/scripts/screenshot.sh full"; }
+    Ctrl+Print { spawn-sh "~/.config/scripts/screenshot.sh window"; }
+    Alt+Print { spawn-sh "~/.config/scripts/screenshot.sh last"; }
+
+
+    Ctrl+Shift+Escape { spawn-sh "alacritty --class btop-float -e btop"; }
+
+    // Overview / window management (niri)
+    Mod+O repeat=false { toggle-overview; }
+    Mod+Q repeat=false { close-window; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F { expand-column-to-available-width; }
+
+    Mod+Left  { focus-column-left; }
+    Mod+Down  { focus-window-down; }
+    Mod+Up    { focus-window-up; }
+    Mod+Right { focus-column-right; }
+    Mod+H     { focus-column-left; }
+    Mod+J     { focus-window-down; }
+    Mod+K     { focus-window-up; }
+    // Mod+L = lock (acima); navegação horizontal via setas / H
+
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+H     { move-column-left; }
+    Mod+Ctrl+J     { move-window-down; }
+    Mod+Ctrl+K     { move-window-up; }
+    Mod+Ctrl+L     { move-column-right; }
+
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+    Mod+Shift+Up    { focus-monitor-up; }
+    Mod+Shift+Down  { focus-monitor-down; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+
+    Mod+Page_Down { focus-workspace-down; }
+    Mod+Page_Up   { focus-workspace-up; }
+    Mod+U         { focus-workspace-down; }
+    Mod+I         { focus-workspace-up; }
+
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
+
+    Mod+Ctrl+1 { move-column-to-workspace 1; }
+    Mod+Ctrl+2 { move-column-to-workspace 2; }
+    Mod+Ctrl+3 { move-column-to-workspace 3; }
+    Mod+Ctrl+4 { move-column-to-workspace 4; }
+    Mod+Ctrl+5 { move-column-to-workspace 5; }
+    Mod+Ctrl+6 { move-column-to-workspace 6; }
+    Mod+Ctrl+7 { move-column-to-workspace 7; }
+    Mod+Ctrl+8 { move-column-to-workspace 8; }
+    Mod+Ctrl+9 { move-column-to-workspace 9; }
+    Mod+Ctrl+0 { move-column-to-workspace 10; }
+
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+
+    // Áudio / brilho via DMS
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "dms ipc call audio increment 3"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "dms ipc call audio decrement 3"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "dms ipc call audio mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn-sh "dms ipc call audio micmute"; }
+    XF86AudioPlay        allow-when-locked=true { spawn-sh "dms ipc call mpris playPause"; }
+    XF86AudioPause       allow-when-locked=true { spawn-sh "dms ipc call mpris playPause"; }
+    XF86AudioPrev        allow-when-locked=true { spawn-sh "dms ipc call mpris previous"; }
+    XF86AudioNext        allow-when-locked=true { spawn-sh "dms ipc call mpris next"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "dms ipc call brightness increment 5 \"\""; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn-sh "dms ipc call brightness decrement 5 \"\""; }
+}
+
+switch-events {
+    lid-close { spawn "bash" "-c" "exec \"$HOME/.config/scripts/clamshell.sh\" close"; }
+    lid-open { spawn "bash" "-c" "exec \"$HOME/.config/scripts/clamshell.sh\" open"; }
+}

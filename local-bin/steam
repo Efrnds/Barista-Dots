@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Steam desktop UI (steamwebhelper/CEF) SIGSEGV em loop neste sistema.
+# Atalho: sobe Steam “headless” (sem CEF) + avisa; jogos non-Steam via Proton.
+set -euo pipefail
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+notify() {
+  command -v notify-send >/dev/null && notify-send -a Steam "$@" || true
+}
+
+# Se pediram um steam://rungameid ou app, tenta via steam nativo sem UI CEF
+if [[ $# -gt 0 ]]; then
+  case "${1:-}" in
+    steam://rungameid/*|steam://launch/*|steam://run/*)
+      notify "Steam" "Iniciando jogo (UI CEF desligada pra evitar loop)…"
+      exec /usr/bin/steam -silent "$@"
+      ;;
+  esac
+fi
+
+# Default: não abrir o cliente piscando — oferece Dressmaker (o que você tava abrindo)
+if [[ -x "$HOME/.local/bin/dressmaker" ]]; then
+  notify "Steam UI quebrada" "Abrindo Dressmaker via Proton (sem loop do steamwebhelper)."
+  exec "$HOME/.local/bin/dressmaker"
+fi
+
+notify "Steam" "UI CEF crashando. Rode: dressmaker"
+exit 1

@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch DMS settings/wallpaper for greeter sync
+
+[Path]
+PathChanged=%h/.config/DankMaterialShell/settings.json
+PathChanged=%h/.cache/DankMaterialShell/dms-colors.json
+Unit=dms-greeter-sync.service
+
+[Install]
+WantedBy=default.target

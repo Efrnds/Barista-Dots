@@ -1,0 +1,9 @@
+[Unit]
+Description=OBS Scene Router (focused window → OBS scenes)
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bash %h/.config/scripts/obs-scene-router/obs-scene-router.sh run
+Restart=on-failure
+RestartSec=3

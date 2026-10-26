@@ -1,0 +1,13 @@
+{
+    "id": "obsRec",
+    "name": "OBS Rec",
+    "description": "Bar pill: recording/streaming status. Click pause, popout stop.",
+    "version": "0.1.0",
+    "author": "eduardo",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./ObsWidget.qml",
+    "icon": "fiber_manual_record",
+    "requires_dms": ">=1.2.0",
+    "permissions": ["settings_read", "process"]
+}

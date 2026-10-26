@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Relatório de saúde do stack Barista Dots.
+# Relatório de saúde do stack Barista Dots (niri + DMS + Alacritty).
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,82 +20,72 @@ info() { echo -e "${BLUE}→${RESET} $*"; }
 
 section() { echo -e "\n${BOLD}$*${RESET}"; }
 
-section "Barista Dots — doctor"
+section "Barista Dots — doctor (niri)"
 
 section "Binários core"
-for cmd in hyprland foot tmux dms fuzzel start-hyprland; do
+for cmd in niri niri-session alacritty tmux dms thunar; do
   if command -v "$cmd" >/dev/null 2>&1; then pass "$cmd"; else fail "$cmd ausente"; fi
 done
-if pacman -Qi ly &>/dev/null; then pass "ly (pacote)"; else warn "ly não instalado"; fi
+if pacman -Qi greetd &>/dev/null; then pass "greetd"; else warn "greetd não instalado"; fi
+if command -v dms-greeter >/dev/null 2>&1; then pass "dms-greeter"; else warn "dms-greeter ausente (AUR: greetd-dms-greeter-bin)"; fi
+if pacman -Qi dms-shell &>/dev/null; then pass "dms-shell"; else fail "dms-shell"; fi
+if pacman -Qi hyprland &>/dev/null; then warn "hyprland ainda instalado — rode ./migrate-stack.sh"; fi
+if pacman -Qi foot &>/dev/null; then warn "foot ainda instalado (obsoleto)"; fi
+if pacman -Qi yazi &>/dev/null; then warn "yazi ainda instalado (obsoleto)"; fi
 
 section "Symlinks / configs"
-if [[ -L "$HOME/.config/hypr" || -d "$HOME/.config/hypr" ]]; then pass "$HOME/.config/hypr"; else fail "$HOME/.config/hypr"; fi
-if [[ -f "$HOME/.config/hypr/hyprland.lua" ]]; then pass "hyprland.lua"; else fail "hyprland.lua"; fi
-if [[ -f "$HOME/.config/foot/foot.ini" ]]; then pass "foot.ini"; else fail "foot.ini"; fi
+if [[ -L "$HOME/.config/niri" || -d "$HOME/.config/niri" ]]; then pass "$HOME/.config/niri"; else fail "$HOME/.config/niri"; fi
+if [[ -f "$HOME/.config/niri/config.kdl" ]]; then pass "config.kdl"; else fail "config.kdl"; fi
+if [[ -f "$HOME/.config/alacritty/alacritty.toml" ]]; then pass "alacritty.toml"; else fail "alacritty.toml"; fi
+if [[ -L "$HOME/.config/scripts" || -d "$HOME/.config/scripts" ]]; then pass "scripts/"; else fail "scripts/"; fi
 if [[ -f "$HOME/.config/dotfiles/user.conf" ]]; then pass "user.conf"; else warn "user.conf ausente (será criado no apply)"; fi
 
-FOOT_SHELL="$(grep -E '^shell=' "$HOME/.config/foot/foot.ini" 2>/dev/null | cut -d= -f2- || true)"
-if [[ -n "$FOOT_SHELL" && "$FOOT_SHELL" == "$HOME"* && -x "$FOOT_SHELL" ]]; then
-  pass "foot shell path absoluto"
-elif [[ -n "$FOOT_SHELL" && -x "$FOOT_SHELL" ]]; then
-  pass "foot shell ok"
+if rg -q 'alacritty-tmux\.sh' "$HOME/.config/alacritty/alacritty.toml" 2>/dev/null; then
+  pass "alacritty shell -> alacritty-tmux.sh"
 else
-  fail "foot shell inválido: ${FOOT_SHELL:-vazio}"
+  warn "alacritty shell não aponta para alacritty-tmux.sh"
+fi
+
+if [[ -x "$HOME/.local/bin/alacritty-tmux.sh" ]]; then
+  pass "alacritty-tmux.sh"
+else
+  fail "alacritty-tmux.sh ausente"
 fi
 
 if rg -q '/home/eduardo' "$DOTFILES/config" "$DOTFILES/templates" \
-  -g '!config/foot/foot.ini' -g '!config/spicetify/config-xpui.ini' 2>/dev/null; then
+  -g '!config/alacritty/alacritty.toml' \
+  -g '!config/spicetify/config-xpui.ini' \
+  -g '!config/gtk-3.0/bookmarks' 2>/dev/null; then
   fail "paths hardcoded /home/eduardo no repo config/"
 else
   pass "sem /home/eduardo hardcoded no repo"
 fi
 
-section "Session manager (Ly)"
-if pacman -Qi ly &>/dev/null; then
-  pass "ly instalado"
-  if systemctl is-enabled ly@tty1.service &>/dev/null; then
-    pass "ly@tty1.service enabled"
-  else
-    warn "ly@tty1.service não enabled — rode hooks/setup-session.sh"
-  fi
-  if [[ -f /etc/ly/config.ini ]] && grep -qE '^full_color\s*=\s*true' /etc/ly/config.ini; then
-    pass "Ly full_color=true (/etc/ly)"
-  elif [[ -f "$DOTFILES/etc/ly/config.ini" ]] && grep -qE '^full_color\s*=\s*true' "$DOTFILES/etc/ly/config.ini"; then
-    warn "Ly /etc desatualizado — rode: ~/dotfiles/hooks/setup-session.sh"
-  else
-    warn "Ly full_color pode estar off (tela preta)"
-  fi
+section "Session manager (greetd + DMS greeter)"
+if systemctl is-enabled greetd.service &>/dev/null; then
+  pass "greetd.service enabled"
 else
-  warn "ly não instalado"
+  warn "greetd não enabled — rode: sudo dms-greeter install"
+fi
+if systemctl is-enabled 'ly@tty1.service' &>/dev/null; then
+  warn "ly@tty1 ainda enabled (conflito) — disable ly"
+fi
+if [[ -f /usr/share/wayland-sessions/niri.desktop ]]; then
+  pass "sessão niri.desktop"
+else
+  warn "niri.desktop ausente em wayland-sessions"
 fi
 
 section "Scripts de launch"
 for s in launch_terminal.sh launch_or_focus.sh launch_cursor.sh toggle_zen_browser.sh; do
-  if [[ -x "$HOME/.config/hypr/scripts/$s" ]]; then pass "$s"; else fail "$s não executável"; fi
+  if [[ -x "$HOME/.config/scripts/$s" ]]; then pass "$s"; else fail "$s não executável"; fi
 done
 
-section "Hypr binds (sessão Wayland)"
-if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] && command -v hyprctl >/dev/null 2>&1; then
-  if hyprctl binds -j 2>/dev/null | python3 -c "
-import json,sys
-binds=json.load(sys.stdin)
-t=[b for b in binds if b.get('key')=='T' and b.get('modmask')==64]
-sys.exit(0 if t else 1)
-" 2>/dev/null; then
-    pass "Super+T registrado"
-  else
-    warn "Super+T não encontrado nos binds"
-  fi
-  if command -v dms >/dev/null 2>&1; then
-    if dms ipc call hypr openBinds 2>&1 | grep -qi success; then
-      pass "DMS openBinds ok"
-    else
-      warn "DMS openBinds falhou — binds podem estar desligados (Super+Shift+C)"
-      info "Fix: dms ipc call hypr openBinds"
-    fi
-  fi
+section "niri (sessão ativa)"
+if command -v niri >/dev/null 2>&1 && [[ -n "${NIRI_SOCKET:-}" ]]; then
+  if niri validate 2>/dev/null; then pass "niri validate"; else warn "niri validate falhou"; fi
 else
-  info "Fora de sessão Wayland — pulando checks hyprctl"
+  info "Fora de sessão niri — pulando checks ao vivo"
 fi
 
 section "Apps opcionais"
@@ -109,8 +99,8 @@ if [[ "$errors" -eq 0 ]]; then
 else
   echo -e "${RED}${BOLD}$errors erro(s)${RESET}, $warnings aviso(s)"
   echo "Sugestões:"
+  echo "  ~/dotfiles/migrate-stack.sh --yes"
   echo "  ~/dotfiles/apply.sh"
   echo "  ~/dotfiles/hooks/setup-session.sh"
-  echo "  dms ipc call hypr openBinds"
   exit 1
 fi

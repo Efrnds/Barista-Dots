@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Dressmaker via Proton, sem depender do steamwebhelper.
+set -euo pipefail
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export DISPLAY="${DISPLAY:-:0}"
+export GDK_BACKEND=x11
+
+GAME_DIR="/home/eduardo/Downloads/Dressmaker-SteamRIP.com/Dressmaker"
+EXE="$GAME_DIR/Dressmaker.exe"
+APPID=3736392540
+COMPAT="/home/eduardo/.local/share/Steam/steamapps/compatdata/$APPID"
+PROTON="/home/eduardo/.local/share/Steam/compatibilitytools.d/GE-Proton11-3/proton"
+STEAM_CLIENT="/home/eduardo/.local/share/Steam"
+
+[[ -x "$PROTON" || -f "$PROTON" ]] || { echo "Proton não encontrado: $PROTON" >&2; exit 1; }
+[[ -f "$EXE" ]] || { echo "Jogo não encontrado: $EXE" >&2; exit 1; }
+mkdir -p "$COMPAT"
+
+export STEAM_COMPAT_CLIENT_INSTALL_PATH="$STEAM_CLIENT"
+export STEAM_COMPAT_DATA_PATH="$COMPAT"
+export SteamAppId="$APPID"
+export SteamGameId="$APPID"
+export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+
+cd "$GAME_DIR"
+exec "$PROTON" run "$EXE" "$@"

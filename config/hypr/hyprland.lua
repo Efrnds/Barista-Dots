@@ -78,6 +78,9 @@ hl.config({
 	master = {
 		mfact = 0.5,
 	},
+	xwayland = {
+		force_zero_scaling = true,
+	},
 })
 
 hl.animation({ leaf = "windowsIn", enabled = true, speed = 4, bezier = "default" })
@@ -99,3 +102,4 @@ require("dms.cursor")
 require("dms.binds")
 require("dms.binds-user")
 require("dms.windowrules")
+require("dms.windowrules-user")

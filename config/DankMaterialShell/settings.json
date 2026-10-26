@@ -27,6 +27,8 @@
   "workspaceFocusedBorderEnabled": true,
   "workspaceFocusedBorderColor": "custom",
   "appIdSubstitutions": [],
+  "greeterEnableFprint": true,
+  "useAutoLocation": true,
   "networkPreference": "ethernet",
   "cursorSettings": {
     "theme": "macOS-hypr",
@@ -49,15 +51,19 @@
   "launcherLogoBrightness": 0.16,
   "fontFamily": "ABC Areal",
   "monoFontFamily": "ABC Areal Mono",
+  "notepadShowLineNumbers": true,
+  "notepadAutoSave": true,
   "terminalsAlwaysDark": true,
   "matugenTemplateGhostty": false,
   "matugenTemplateKitty": false,
-  "matugenTemplateAlacritty": false,
   "matugenTemplateWezterm": false,
+  "showDock": true,
   "dockAutoHide": true,
   "dockSpacing": 5,
   "dockLauncherEnabled": true,
   "dockShowTrash": true,
+  "enableFprint": true,
+  "lockPamPath": "/home/eduardo/.local/state/DankMaterialShell/pam/dankshell",
   "osdPowerProfileEnabled": true,
   "updaterIgnoredPackages": [
     "ollama",
@@ -104,7 +110,7 @@
           "enabled": true
         },
         {
-          "id": "dockerManager",
+          "id": "baristaHub",
           "enabled": true
         }
       ],
@@ -131,8 +137,8 @@
       "widgetOutlineColor": "primary",
       "widgetOutlineOpacity": 1,
       "widgetOutlineThickness": 1,
-      "fontScale": 1,
-      "iconScale": 1,
+      "fontScale": 0.85,
+      "iconScale": 0.85,
       "autoHide": false,
       "autoHideStrict": false,
       "autoHideDelay": 250,
@@ -153,16 +159,15 @@
       "clickThrough": false,
       "hoverPopouts": true,
       "hoverPopoutDelay": 150,
-      "island": true,
       "islandNotificationExpand": false,
-      "islandSatelliteBackground": true,
+      "islandSatelliteBackground": false,
       "islandInteractionMode": "hybrid",
       "islandHomeCompactTight": false,
       "islandPalette": "default",
       "islandMediaClockVisible": true,
       "islandHighContrast": false,
       "islandSatellitesEnabled": true,
-      "islandSatelliteGothCorners": true,
+      "islandSatelliteGothCorners": false,
       "islandSatellitePosition": "edges",
       "islandHomeClockDisplay": "both",
       "islandHomeLayout": [
@@ -196,7 +201,14 @@
         }
       ],
       "islandCornerRadius": 64,
-      "islandReducedMotion": false
+      "islandReducedMotion": false,
+      "attachToScreenEdge": false,
+      "island": true,
+      "islandReserveThickness": 40,
+      "islandCompactThickness": 33,
+      "islandOuterGap": 4,
+      "islandAlongOffset": 0,
+      "islandBatteryStyle": "solid"
     }
   ],
   "desktopClockCustomColor": {
@@ -210,7 +222,8 @@
     "hslHue": -1,
     "hslSaturation": 0,
     "hslLightness": 1,
-    "valid": true
+    "valid": true,
+    "rgba": -1
   },
   "systemMonitorCustomColor": {
     "r": 1,
@@ -223,7 +236,8 @@
     "hslHue": -1,
     "hslSaturation": 0,
     "hslLightness": 1,
-    "valid": true
+    "valid": true,
+    "rgba": -1
   },
   "builtInPluginSettings": {
     "dms_settings_search": {
@@ -241,5 +255,6 @@
   },
   "frameRounding": 17,
   "frameCloseGaps": false,
-  "configVersion": 18
+  "configVersion": 18,
+  "iconTheme": "macOS"
 }

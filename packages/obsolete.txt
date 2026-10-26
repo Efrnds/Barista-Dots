@@ -1,0 +1,20 @@
+# Pacotes da stack antiga (Hyprland) — removidos por migrate-stack.sh / update.sh
+hyprland
+hypridle
+hyprlock
+hyprpolkitagent
+hyprpicker
+hyprland-guiutils
+hyprland-qt-support
+xdg-desktop-portal-hyprland
+dms-shell-hyprland
+foot
+yazi
+# Terminais duplicados (stack oficial = alacritty)
+kitty
+# Shells/bars substituídos pelo DMS
+mako
+swayidle
+swaylock
+wlogout
+waybar

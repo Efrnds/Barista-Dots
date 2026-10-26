@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=ZapFast
+Exec=zapfast
+Icon=zapfast
+Terminal=false
+Categories=Network;
+X-GNOME-Autostart-enabled=true
+StartupWMClass=zapfast

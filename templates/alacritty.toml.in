@@ -1,0 +1,36 @@
+# Gerado por hooks/render-config.sh — não editar alacritty.toml direto no repo
+[general]
+import = ["${HOME}/.config/alacritty/colors.toml"]
+
+[env]
+TERM = "alacritty"
+
+[window]
+padding = { x = 15, y = 15 }
+dynamic_padding = true
+decorations = "None"
+opacity = 1.0
+
+[font]
+size = 9.3
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+
+[scrolling]
+history = 10000
+
+[terminal]
+shell = { program = "${HOME}/.local/bin/alacritty-tmux.sh" }
