@@ -1,11 +1,13 @@
 {
     "id": "rtkStatus",
     "name": "RTK Status",
-    "description": "Bar widget: projetos sem RTK + savings. Helper Go (rtk-bar).",
+    "description": "Bar widget: projects without RTK + savings (rtk-bar helper).",
     "version": "0.1.0",
     "author": "eduardo",
     "type": "widget",
-    "capabilities": ["dankbar-widget"],
+    "capabilities": [
+        "dankbar-widget"
+    ],
     "component": "./RtkWidget.qml",
     "icon": "savings",
     "requires_dms": ">=1.2.0",

@@ -1,13 +1,18 @@
 {
     "id": "freelaTimer",
     "name": "Freela Timer",
-    "description": "Timer de projeto/freela na barra. Start/stop por projeto.",
+    "description": "Project/freela timer on the bar. Start/stop per project.",
     "version": "0.1.0",
     "author": "eduardo",
     "type": "widget",
-    "capabilities": ["dankbar-widget"],
+    "capabilities": [
+        "dankbar-widget"
+    ],
     "component": "./FreelaWidget.qml",
     "icon": "timer",
     "requires_dms": ">=1.2.0",
-    "permissions": ["settings_read", "process"]
+    "permissions": [
+        "settings_read",
+        "process"
+    ]
 }

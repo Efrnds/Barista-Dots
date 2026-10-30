@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync profile avatar to .face / greeter cache
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/scripts/sync-avatar.sh

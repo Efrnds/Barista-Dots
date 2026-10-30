@@ -1,0 +1,9 @@
+# barista-dots — greetd + tuigreet (sem Wayland no greeter)
+# plymouth → TTY → niri uma vez (sem flash de 2 compositors)
+
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --time --remember --remember-session --asterisks --greeting 'barista-dots' --theme 'border=darkgray;text=white;prompt=darkgray;time=gray;action=gray;button=white;container=black;input=white' --power-shutdown 'systemctl poweroff' --power-reboot 'systemctl reboot' --cmd @HOME@/.local/bin/niri-session-fast"
+user = "greeter"

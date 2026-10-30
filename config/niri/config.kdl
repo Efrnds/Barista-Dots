@@ -32,6 +32,7 @@ input {
 include "dms/colors.kdl"
 
 layout {
+    background-color "#BDBCAC"
     gaps 6
 
     center-focused-column "never"
@@ -284,3 +285,4 @@ switch-events {
     lid-close { spawn "bash" "-c" "exec \"$HOME/.config/scripts/clamshell.sh\" close"; }
     lid-open { spawn "bash" "-c" "exec \"$HOME/.config/scripts/clamshell.sh\" open"; }
 }
+include "dms/layout.kdl"

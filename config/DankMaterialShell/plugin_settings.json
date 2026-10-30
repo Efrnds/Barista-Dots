@@ -36,5 +36,8 @@
   },
   "baristaHub": {
     "enabled": true
+  },
+  "lanIp": {
+    "enabled": true
   }
 }

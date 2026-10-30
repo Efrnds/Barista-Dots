@@ -12,7 +12,8 @@ Dotfiles com **symlinks** para Arch Linux — mesma config em várias máquinas.
 | **Alacritty** | terminal + tmux |
 | **tmux** | prefixo `Ctrl+b` |
 | **Thunar** | file manager |
-| **Ly** | display manager (`ly@tty1`) |
+| **greetd + dms-greeter** | login (alternativa: Ly via `session.conf`) |
+| **Plymouth barista** | splash silencioso |
 | **zen-browser** | opcional (`--extras`) |
 
 ---
@@ -23,6 +24,7 @@ Dotfiles com **symlinks** para Arch Linux — mesma config em várias máquinas.
 - Usuário com **sudo**
 - **Internet** (clone do repo + pacotes via `yay`)
 - Não rode os scripts como root
+- Locale do usuário configurado (`LANG`, ex. `pt_BR.UTF-8` ou `en_US.UTF-8`) — plugins DMS seguem o idioma
 
 ---
 
@@ -50,24 +52,33 @@ cd ~/dotfiles
 ~/dotfiles/migrate-stack.sh --yes
 ```
 
-Instala a stack nova, remove pacotes de `packages/obsolete.txt` (hyprland, foot, yazi, …) e aplica configs.
-
 ### Flags do `install.sh`
 
 | Flag | Efeito |
 |------|--------|
-| *(sem flags)* | Pacotes core + `apply.sh` + Ly + `chsh` para zsh + `doctor.sh` |
+| *(sem flags)* | Pacotes core + `apply.sh` + session + `chsh` zsh + `doctor.sh` |
 | `--extras` | Instala também `packages/extras.txt` |
 | `--minimal` | Só core; **não** altera shell padrão (`chsh`) |
+
+### Pós-install (sudo, polish de boot)
+
+```bash
+~/dotfiles/plymouth/apply-boot-polish.sh
+~/dotfiles/scripts/apply-silent-shutdown.sh
+# opcional:
+~/dotfiles/scripts/fast-boot-system.sh
+```
 
 ---
 
 ## Primeiro boot
 
 1. Reinicie após o `install.sh` / `migrate-stack.sh`
-2. O **Ly** abre no TTY1 (`ly@tty1.service`)
-3. Faça login e selecione a sessão **`Niri (DMS)`**
+2. Splash **Plymouth barista** → greetd / dms-greeter (ou Ly)
+3. Sessão **niri** + **DMS**
 4. **Não** use Hyprland (stack antiga)
+
+Session manager: edite `~/dotfiles/session.conf` (`dms-greeter` | `ly` | `auto`) e rode `~/dotfiles/hooks/setup-session.sh`.
 
 ---
 
@@ -81,6 +92,7 @@ Instala a stack nova, remove pacotes de `packages/obsolete.txt` (hyprland, foot,
 | `Super+B` | Browser (zen-browser) |
 | `Super+C` | Editor (Cursor) |
 | `Super+E` | Thunar |
+| `Super+L` | Lock (fingerprint se enrollado) |
 | `Super+Escape` | Powermenu DMS |
 | `Super+O` | Overview niri |
 
@@ -101,11 +113,21 @@ FILE_MANAGER_CMD="thunar"
 CURSOR_APP="${HOME}/Applications/cursor.AppImage"
 ```
 
-Depois:
+Depois: `~/dotfiles/apply.sh`.
 
-```bash
-~/dotfiles/apply.sh
-```
+Pastas XDG (`Pictures` / `Imagens`, etc.) vêm de `~/.config/user-dirs.dirs` — wallpapers e bookmarks do Thunar respeitam o idioma do sistema.
+
+---
+
+## O que cada peça faz
+
+| Área | Doc |
+|------|-----|
+| Plugins da barra (Hub, Freela, OBS, RTK, LAN IP) + **i18n** | [docs/PLUGINS.md](docs/PLUGINS.md) |
+| Troca de avatar nas Settings do DMS | [docs/AVATAR.md](docs/AVATAR.md) |
+| Boot Plymouth, greetd, fingerprint, tela preta | [docs/BOOT-LOGIN.md](docs/BOOT-LOGIN.md) |
+| Problemas comuns | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) |
+| Pacotes | [packages/README.md](packages/README.md) |
 
 ---
 
@@ -113,13 +135,17 @@ Depois:
 
 | Script | Função |
 |--------|--------|
-| `migrate-stack.sh` | Migra Hyprland → niri (pacotes + apply) |
+| `migrate-stack.sh` | Migra Hyprland → niri |
 | `apply.sh` | Symlinks + hooks pós-apply |
 | `import.sh` | Copia configs locais → repo |
 | `update.sh` | `git pull` + sync pacotes + apply + doctor |
 | `install.sh` | Máquina nova |
-| `doctor.sh` | Diagnóstico da stack niri |
+| `doctor.sh` | Diagnóstico |
 | `tests/smoke.sh` | Smoke tests |
+| `config/scripts/prepare-avatar.sh` | Resize avatar ≤1 MiB |
+| `config/scripts/refresh-dms-ui.sh` | Reaplica patch de UI após update do DMS |
+| `plymouth/apply-boot-polish.sh` | Tema barista + GRUB quiet |
+| `scripts/apply-silent-shutdown.sh` | Shutdown sem spam |
 
 ---
 
@@ -136,14 +162,6 @@ cd ~/dotfiles && git add -A && git commit -m "sync" && git push
 
 ---
 
-## Documentação
-
-- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-- [docs/KEYBINDS.md](docs/KEYBINDS.md)
-- [packages/README.md](packages/README.md)
-
----
-
 ## O que é versionado
 
 | Repo | Destino |
@@ -153,8 +171,11 @@ cd ~/dotfiles && git add -A && git commit -m "sync" && git push
 | `config/scripts/` | `~/.config/scripts/` |
 | `config/tmux/` | `~/.config/tmux/` |
 | `config/DankMaterialShell/` | `~/.config/DankMaterialShell/` |
+| `dms-plugins/` | `~/.config/DankMaterialShell/plugins/` (symlink) |
 | `local-bin/` | `~/.local/bin/` |
 | `systemd/user/` | `~/.config/systemd/user/` |
+| `plymouth/` | instalado via script (system) |
+| `greetd/` | referência / apply com sudo |
 | `home/.zshrc`, etc. | `~/` |
 
-**Não versionado:** wallpapers grandes, secrets, `user.conf`.
+**Não versionado:** wallpapers grandes, secrets, `user.conf`, `~/.local/share/dms-ui` (gerado localmente).

@@ -1,4 +1,4 @@
-export TERMINAL="foot"
+export TERMINAL="alacritty"
 export EDITOR="nvim"
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
@@ -125,8 +125,8 @@ alias ai='ollama run qwen2.5:1.5b'
 
 export QT_QPA_PLATFORMTHEME=qt5ct
 
-# Executa o fastfetch na inicialização do terminal
-if command -v fastfetch &> /dev/null; then
+# fastfetch: só em emulador de terminal, nunca no VT/boot
+if [[ -o interactive && -t 1 && -n ${WAYLAND_DISPLAY:-}${DISPLAY:-} ]]   && command -v fastfetch &>/dev/null; then
     fastfetch
 fi
 

@@ -1,0 +1,16 @@
+# barista-dots — referência. Deploy: hooks/setup-session.sh ou
+#   sed "s|@USER@|$USER|g; s|@HOME@|$HOME|g" greetd/config.toml | sudo tee /etc/greetd/config.toml
+[terminal]
+vt = 1
+
+[general]
+# CRITICAL: se true, sourceia profile/zsh e aparece lixo no TTY preto antes do niri
+source_profile = false
+
+[initial_session]
+user = "@USER@"
+command = "@HOME@/.local/bin/niri-session-fast"
+
+[default_session]
+command = "/usr/bin/dms-greeter --command niri --cache-dir /var/cache/dms-greeter -C /etc/greetd/niri/config.kdl"
+user = "greeter"

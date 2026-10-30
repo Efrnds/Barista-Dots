@@ -1,0 +1,40 @@
+#!/bin/sh
+# Sessão niri silenciosa — nada impresso no TTY (evita tela preta com texto antes do compositor)
+set -eu
+
+# Silencia stdout/stderr do VT1 imediatamente
+if [ -z "${BARISTA_SESSION_SILENCED:-}" ]; then
+  export BARISTA_SESSION_SILENCED=1
+  exec >/dev/null 2>&1
+fi
+
+if [ -n "${MANAGERPID:-}" ] && [ "${SYSTEMD_EXEC_PID:-}" = "$$" ]; then
+  case "$(ps -p "$MANAGERPID" -o cmd=)" in
+    *systemd*--user*) exec niri --session ;;
+  esac
+fi
+
+if ! hash systemctl >/dev/null 2>&1; then
+  exec /usr/bin/niri-session "$@"
+fi
+
+if systemctl --user -q is-active niri.service; then
+  exit 1
+fi
+
+export PATH="${HOME}/.local/bin:/usr/local/bin:/usr/bin:${PATH:-}"
+export BARISTA_NIRI_BOOTSTRAPPED=1
+
+systemctl --user reset-failed
+systemctl --user import-environment 2>/dev/null || true
+
+if hash dbus-update-activation-environment >/dev/null 2>&1; then
+  dbus-update-activation-environment --all 2>/dev/null || true
+fi
+
+# limpa VT residual (sem eco)
+clear 2>/dev/null || true
+
+systemctl --user --wait start niri.service
+systemctl --user start --job-mode=replace-irreversibly niri-shutdown.target 2>/dev/null || true
+systemctl --user unset-environment WAYLAND_DISPLAY DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP NIRI_SOCKET 2>/dev/null || true

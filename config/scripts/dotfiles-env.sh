@@ -8,8 +8,8 @@ if [[ -f "$_user_conf" ]]; then
   source "$_user_conf"
 fi
 
-: "${TERMINAL_CMD:=foot-tmux.sh}"
-: "${TERMINAL_CLASS:=foot}"
+: "${TERMINAL_CMD:=alacritty}"
+: "${TERMINAL_CLASS:=Alacritty}"
 : "${BROWSER_CMD:=zen-browser}"
 : "${BROWSER_CLASS:=zen}"
 : "${FILE_MANAGER_CMD:=thunar}"

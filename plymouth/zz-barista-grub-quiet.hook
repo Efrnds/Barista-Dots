@@ -1,0 +1,13 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = grub
+Target = linux
+Target = plymouth
+
+[Action]
+Description = Silenciar textos do GRUB (barista quiet boot)
+When = PostTransaction
+Exec = /usr/local/lib/barista/quiet-grub.sh
+NeedsTargets

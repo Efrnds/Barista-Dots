@@ -1,0 +1,11 @@
+{
+  "No IP · disconnected?": { "No IP · disconnected?": "Sem IP · desconectado?" },
+  "%1 · %2 · click to copy": { "%1 · %2 · click to copy": "%1 · %2 · clique p/ copiar" },
+  "No IP to copy": { "No IP to copy": "Sem IP pra copiar" },
+  "Copied: %1": { "Copied: %1": "Copiado: %1" },
+  "Local IP": { "Local IP": "IP local" },
+  "Status: %1": { "Status: %1": "Status: %1" },
+  "unknown": { "unknown": "desconhecido" },
+  "Copy IP": { "Copy IP": "Copiar IP" },
+  "network": { "network": "rede" }
+}

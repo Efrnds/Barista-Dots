@@ -1,0 +1,12 @@
+[Unit]
+Description=Watch avatar sources and sync
+
+[Path]
+PathModified=%h/.face
+PathChanged=%h/.face
+PathModified=/var/lib/AccountsService/icons/%u
+PathChanged=/var/lib/AccountsService/icons/%u
+Unit=avatar-sync.service
+
+[Install]
+WantedBy=default.target

@@ -2,30 +2,30 @@
 # Do not edit manually - changes will be overwritten
 
 [colors.primary]
-foreground = "#5F6267"
-background = "#101418"
+foreground = "#CFC1B7"
+background = "#19120C"
 
 [colors.normal]
-black   = "#101418"
-red     = "#EF6B92"
-green   = "#68D075"
-yellow  = "#FFF772"
-blue    = "#5C90C5"
-magenta = "#003D64"
-cyan    = "#74A1D0"
-white   = "#CDD5DA"
+black   = "#19120C"
+red     = "#EC584E"
+green   = "#65CE51"
+yellow  = "#FFE154"
+blue    = "#C37D35"
+magenta = "#573100"
+cyan    = "#CE9051"
+white   = "#D8D1C8"
 
 [colors.bright]
-black   = "#3E4347"
-red     = "#FF9FBB"
-green   = "#A2F9AD"
-yellow  = "#FFFAA5"
-blue    = "#8EB8E4"
-magenta = "#B0D6FF"
-cyan    = "#CCE5FF"
-white   = "#F8FCFF"
+black   = "#46423C"
+red     = "#FF918A"
+green   = "#9FF78E"
+yellow  = "#FFEC92"
+blue    = "#E2A86D"
+magenta = "#FFC992"
+cyan    = "#FFDCB9"
+white   = "#FFFBF7"
 
 [colors.selection]
-text       = "#5F6267"
-background = "#3D6C98"
+text       = "#CFC1B7"
+background = "#925D22"
 

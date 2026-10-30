@@ -1,13 +1,18 @@
 {
     "id": "baristaHub",
     "name": "Barista Hub",
-    "description": "Central: Freela timer + invoice, OBS rec, RTK — uma pill só.",
+    "description": "Hub: freela timer + invoice, OBS rec, RTK \u2014 one bar pill.",
     "version": "0.1.0",
     "author": "eduardo",
     "type": "widget",
-    "capabilities": ["dankbar-widget"],
+    "capabilities": [
+        "dankbar-widget"
+    ],
     "component": "./HubWidget.qml",
     "icon": "apps",
     "requires_dms": ">=1.2.0",
-    "permissions": ["settings_read", "process"]
+    "permissions": [
+        "settings_read",
+        "process"
+    ]
 }

@@ -1,7 +1,9 @@
 # Backups locais / lixo
 *.bak
 *.bak.*
+*.backup*
 .DS_Store
+config/niri/config.kdl.backup*
 
 # Hypr — mídia grande (não versionar)
 config/hypr/current_wallpaper.jpg

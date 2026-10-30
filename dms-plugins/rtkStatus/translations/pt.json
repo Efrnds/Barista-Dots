@@ -1,0 +1,14 @@
+{
+  "Activating RTK in %1…": { "Activating RTK in %1…": "Ativando RTK em %1…" },
+  "RTK enabled": { "RTK enabled": "RTK ativado" },
+  "Failed to enable RTK (exit %1)": { "Failed to enable RTK (exit %1)": "Falha ao ativar RTK (exit %1)" },
+  "%1 without RTK": { "%1 without RTK": "%1 sem RTK" },
+  "%1 saved": { "%1 saved": "%1 saved" },
+  "RTK · projects": { "RTK · projects": "RTK · projetos" },
+  "%1 with RTK · %2 without · %3 tokens saved": {
+    "%1 with RTK · %2 without · %3 tokens saved": "%1 com RTK · %2 sem · %3 tokens salvos"
+  },
+  "Without RTK": { "Without RTK": "Sem RTK" },
+  "Top savings": { "Top savings": "Top savings" },
+  "Refresh": { "Refresh": "Atualizar" }
+}

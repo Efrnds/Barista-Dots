@@ -31,6 +31,11 @@ PluginComponent {
     readonly property string obsBin: home + "/.config/scripts/obs-rec-status.py"
     readonly property string rtkBarBin: home + "/.local/bin/rtk-bar"
     readonly property string rtkBin: home + "/.local/bin/rtk"
+    readonly property string pluginId: "baristaHub"
+
+    function t(term) {
+        return I18n.trFor(pluginId, term)
+    }
 
     readonly property string pillText: {
         if (obs.recording || obs.streaming)
@@ -95,7 +100,7 @@ PluginComponent {
     function activateRtk(path, name) {
         if (!path || root.busyPath !== "") return
         root.busyPath = path
-        root.statusMsg = "Ativando RTK em " + (name || path) + "…"
+        root.statusMsg = root.t("Activating RTK in %1…").arg(name || path)
         rtkInit.command = [
             "sh", "-c",
             "cd \"$1\" && \"$2\" init --claude-md --auto-patch",
@@ -105,7 +110,7 @@ PluginComponent {
     }
 
     function invoice(period) {
-        root.invoiceMsg = "Gerando invoice…"
+        root.invoiceMsg = root.t("Generating invoice…")
         invoiceAct.command = [freelaBin, "invoice", period]
         invoiceAct.running = false
         invoiceAct.running = true
@@ -168,13 +173,13 @@ PluginComponent {
                 try {
                     const d = JSON.parse(text)
                     if (d.path_md) {
-                        root.invoiceMsg = "Invoice: " + d.total + " → " + d.path_md
+                        root.invoiceMsg = root.t("Invoice: %1 → %2").arg(d.total).arg(d.path_md)
                         root.openFolder(d.path_md)
                     } else {
-                        root.invoiceMsg = d.error || "falha"
+                        root.invoiceMsg = d.error || root.t("failed")
                     }
                 } catch (e) {
-                    root.invoiceMsg = "erro ao gerar"
+                    root.invoiceMsg = root.t("error generating invoice")
                 }
                 msgClear.restart()
             }
@@ -186,7 +191,7 @@ PluginComponent {
         stdout: StdioCollector {
             onStreamFinished: {
                 root.busyPath = ""
-                root.statusMsg = ((text || "").trim().split("\n")[0]) || "RTK ok"
+                root.statusMsg = ((text || "").trim().split("\n")[0]) || root.t("RTK ok")
                 rtkProc.running = false; rtkProc.running = true
                 msgClear.restart()
             }
@@ -194,7 +199,7 @@ PluginComponent {
         onExited: function (code) {
             if (code !== 0 && root.busyPath !== "") {
                 root.busyPath = ""
-                root.statusMsg = "Falha RTK"
+                root.statusMsg = root.t("RTK failed")
                 msgClear.restart()
             }
         }
@@ -318,7 +323,6 @@ PluginComponent {
                 width: parent.width
             }
 
-            // ——— FREELA ———
             Column {
                 visible: root.tab === "freela"
                 spacing: Theme.spacingS
@@ -327,7 +331,7 @@ PluginComponent {
                 StyledText {
                     text: root.freela.running
                           ? ("▶ " + root.freela.project + " · " + root.freela.elapsed)
-                          : "Parado · hoje " + root.freela.today
+                          : root.t("Stopped · today %1").arg(root.freela.today)
                     color: Theme.surfaceText
                     font.pixelSize: Theme.fontSizeSmall
                     wrapMode: Text.Wrap
@@ -337,22 +341,22 @@ PluginComponent {
                 Row {
                     spacing: Theme.spacingS
                     DankButton {
-                        text: "Parar"
+                        text: root.t("Stop")
                         enabled: root.freela.running
                         onClicked: root.freelaCmd("stop")
                     }
                     DankButton {
-                        text: "Invoice semana"
+                        text: root.t("Invoice week")
                         onClicked: root.invoice("week")
                     }
                     DankButton {
-                        text: "Invoice hoje"
+                        text: root.t("Invoice today")
                         onClicked: root.invoice("today")
                     }
                 }
 
                 StyledText {
-                    text: "Projetos"
+                    text: root.t("Projects")
                     font.weight: Font.DemiBold
                     color: Theme.primary
                 }
@@ -373,14 +377,13 @@ PluginComponent {
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         DankButton {
-                            text: modelData.active ? "Stop" : "Start"
+                            text: modelData.active ? root.t("Stop") : root.t("Start")
                             onClicked: root.freelaCmd("toggle", modelData.name)
                         }
                     }
                 }
             }
 
-            // ——— OBS ———
             Column {
                 visible: root.tab === "obs"
                 spacing: Theme.spacingS
@@ -388,10 +391,10 @@ PluginComponent {
 
                 StyledText {
                     text: !root.obs.connected
-                          ? "OBS offline"
+                          ? root.t("OBS offline")
                           : (root.obs.recording
-                             ? ((root.obs.paused ? "Pausado " : "Gravando ") + root.fmtDur(root.obs.duration_sec))
-                             : "Conectado · idle")
+                             ? ((root.obs.paused ? root.t("Paused ") : root.t("Recording ")) + root.fmtDur(root.obs.duration_sec))
+                             : root.t("Connected · idle"))
                           + (root.obs.streaming ? " · LIVE" : "")
                     color: Theme.surfaceText
                     font.pixelSize: Theme.fontSizeSmall
@@ -402,28 +405,28 @@ PluginComponent {
                 Row {
                     spacing: Theme.spacingS
                     DankButton {
-                        text: root.obs.recording || root.obs.paused ? "Pause/Resume" : "Rec"
+                        text: root.obs.recording || root.obs.paused ? root.t("Pause/Resume") : root.t("Rec")
                         enabled: root.obs.connected
                         onClicked: root.obsCmd(root.obs.recording || root.obs.paused ? "toggle-pause" : "toggle-record")
                     }
                     DankButton {
-                        text: "Stop"
+                        text: root.t("Stop")
                         enabled: root.obs.connected && (root.obs.recording || root.obs.paused)
                         onClicked: root.obsCmd("stop")
                     }
                 }
             }
 
-            // ——— RTK ———
             Column {
                 visible: root.tab === "rtk"
                 spacing: Theme.spacingS
                 width: parent.width
 
                 StyledText {
-                    text: (root.rtk.summary.with_rtk || 0) + " com · "
-                          + (root.rtk.summary.without_rtk || 0) + " sem · "
-                          + root.fmtTokens(root.rtk.summary.saved_tokens_all) + " saved"
+                    text: root.t("%1 with · %2 without · %3 saved")
+                          .arg(root.rtk.summary.with_rtk || 0)
+                          .arg(root.rtk.summary.without_rtk || 0)
+                          .arg(root.fmtTokens(root.rtk.summary.saved_tokens_all))
                     color: Theme.surfaceText
                     font.pixelSize: Theme.fontSizeSmall
                     wrapMode: Text.Wrap
@@ -432,7 +435,7 @@ PluginComponent {
 
                 StyledText {
                     visible: (root.rtk.without_rtk || []).length > 0
-                    text: "Sem RTK"
+                    text: root.t("Without RTK")
                     font.weight: Font.DemiBold
                     color: Theme.warning
                 }
@@ -465,7 +468,7 @@ PluginComponent {
 
                 StyledText {
                     visible: (root.rtk.with_rtk || []).length > 0
-                    text: "Top savings"
+                    text: root.t("Top savings")
                     font.weight: Font.DemiBold
                     color: Theme.primary
                 }
@@ -493,7 +496,7 @@ PluginComponent {
             }
 
             DankButton {
-                text: "Atualizar"
+                text: root.t("Refresh")
                 onClicked: root.refreshAll()
             }
         }

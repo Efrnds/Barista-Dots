@@ -11,6 +11,7 @@
   },
   "matugenContrast": -0.19,
   "cornerRadius": 12,
+  "niriLayoutBorderSize": 1,
   "hyprlandLayoutGapsOverride": 4,
   "hyprlandLayoutGapsOutOverride": 6,
   "hyprlandLayoutRadiusOverride": 20,
@@ -21,12 +22,79 @@
   "motionEffect": 1,
   "m3ElevationEnabled": false,
   "controlCenterShowMicPercent": true,
+  "controlCenterWidgets": [
+    {
+      "id": "volumeSlider",
+      "enabled": true,
+      "width": 50
+    },
+    {
+      "id": "brightnessSlider",
+      "enabled": true,
+      "width": 50,
+      "deviceName": "backlight:intel_backlight"
+    },
+    {
+      "id": "wifi",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "bluetooth",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "audioOutput",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "audioInput",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "nightMode",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "darkMode",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "battery",
+      "enabled": true,
+      "width": 25
+    },
+    {
+      "id": "diskUsage",
+      "enabled": true,
+      "width": 25,
+      "instanceId": "mvu8lddab521b8o9wmbpzw6cie0qw",
+      "mountPath": "/",
+      "showMountPath": true
+    },
+    {
+      "id": "builtin_cups",
+      "enabled": true,
+      "width": 50
+    },
+    {
+      "id": "builtin_vpn",
+      "enabled": true,
+      "width": 50
+    }
+  ],
   "showWorkspaceIndex": true,
   "showWorkspacePadding": true,
   "workspaceFollowFocus": true,
   "workspaceFocusedBorderEnabled": true,
   "workspaceFocusedBorderColor": "custom",
   "appIdSubstitutions": [],
+  "greeterAutoLogin": true,
   "greeterEnableFprint": true,
   "useAutoLocation": true,
   "networkPreference": "ethernet",
@@ -53,11 +121,11 @@
   "monoFontFamily": "ABC Areal Mono",
   "notepadShowLineNumbers": true,
   "notepadAutoSave": true,
+  "useSystemSoundTheme": true,
   "terminalsAlwaysDark": true,
   "matugenTemplateGhostty": false,
   "matugenTemplateKitty": false,
   "matugenTemplateWezterm": false,
-  "showDock": true,
   "dockAutoHide": true,
   "dockSpacing": 5,
   "dockLauncherEnabled": true,
@@ -100,6 +168,10 @@
         "cpuUsage",
         "memUsage",
         "battery",
+        {
+          "id": "lanIp",
+          "enabled": true
+        },
         "controlCenterButton",
         {
           "id": "bongoCat",
@@ -255,6 +327,5 @@
   },
   "frameRounding": 17,
   "frameCloseGaps": false,
-  "configVersion": 18,
-  "iconTheme": "macOS"
+  "configVersion": 18
 }

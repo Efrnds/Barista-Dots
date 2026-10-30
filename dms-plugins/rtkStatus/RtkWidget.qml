@@ -19,6 +19,12 @@ PluginComponent {
 
     readonly property string rtkBin: Quickshell.env("HOME") + "/.local/bin/rtk"
     readonly property string rtkBarBin: Quickshell.env("HOME") + "/.local/bin/rtk-bar"
+    readonly property string pluginId: "rtkStatus"
+    readonly property string activatingPrefix: I18n.trFor(pluginId, "Activating RTK in %1…").split("%1")[0]
+
+    function t(term) {
+        return I18n.trFor(pluginId, term)
+    }
 
     function refresh() {
         proc.running = false
@@ -40,7 +46,7 @@ PluginComponent {
     function activateRtk(path, name) {
         if (!path || root.busyPath !== "") return
         root.busyPath = path
-        root.statusMsg = "Ativando RTK em " + (name || path) + "…"
+        root.statusMsg = root.t("Activating RTK in %1…").arg(name || path)
         initProc.command = [
             "sh", "-c",
             "cd \"$1\" && \"$2\" init --claude-md --auto-patch",
@@ -51,7 +57,6 @@ PluginComponent {
 
     Process {
         id: proc
-        // DMS PATH is only /usr/local/bin:/usr/bin — use absolute path
         command: [root.rtkBarBin]
         running: true
         stdout: StdioCollector {
@@ -72,7 +77,7 @@ PluginComponent {
             onStreamFinished: {
                 const out = (text || "").trim()
                 root.busyPath = ""
-                root.statusMsg = out.length ? out.split("\n")[0] : "RTK ativado"
+                root.statusMsg = out.length ? out.split("\n")[0] : root.t("RTK enabled")
                 root.refresh()
                 statusClear.restart()
             }
@@ -88,8 +93,8 @@ PluginComponent {
         onExited: function (exitCode, exitStatus) {
             if (exitCode !== 0 && root.busyPath !== "") {
                 root.busyPath = ""
-                if (!root.statusMsg || root.statusMsg.startsWith("Ativando"))
-                    root.statusMsg = "Falha ao ativar RTK (exit " + exitCode + ")"
+                if (!root.statusMsg || root.statusMsg.indexOf(root.activatingPrefix) === 0)
+                    root.statusMsg = root.t("Failed to enable RTK (exit %1)").arg(exitCode)
                 statusClear.restart()
             }
         }
@@ -188,8 +193,8 @@ PluginComponent {
 
         StyledText {
             text: (root.report.summary.without_rtk || 0) > 0
-                  ? (root.report.summary.without_rtk + " sem RTK")
-                  : (root.fmtTokens(root.report.summary.saved_tokens_all) + " saved")
+                  ? root.t("%1 without RTK").arg(root.report.summary.without_rtk)
+                  : root.t("%1 saved").arg(root.fmtTokens(root.report.summary.saved_tokens_all))
             font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
             color: Theme.widgetTextColor || Theme.surfaceText
             anchors.verticalCenter: parent.verticalCenter
@@ -218,16 +223,17 @@ PluginComponent {
             width: 320
 
             StyledText {
-                text: "RTK · projetos"
+                text: root.t("RTK · projects")
                 font.pixelSize: Theme.fontSizeLarge
                 font.weight: Font.DemiBold
                 color: Theme.surfaceText
             }
 
             StyledText {
-                text: (root.report.summary.with_rtk || 0) + " com RTK · "
-                      + (root.report.summary.without_rtk || 0) + " sem · "
-                      + root.fmtTokens(root.report.summary.saved_tokens_all) + " tokens salvos"
+                text: root.t("%1 with RTK · %2 without · %3 tokens saved")
+                      .arg(root.report.summary.with_rtk || 0)
+                      .arg(root.report.summary.without_rtk || 0)
+                      .arg(root.fmtTokens(root.report.summary.saved_tokens_all))
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.surfaceText
                 opacity: 0.8
@@ -246,7 +252,7 @@ PluginComponent {
 
             StyledText {
                 visible: (root.report.without_rtk || []).length > 0
-                text: "Sem RTK"
+                text: root.t("Without RTK")
                 font.weight: Font.DemiBold
                 color: Theme.warning
             }
@@ -262,7 +268,7 @@ PluginComponent {
 
             StyledText {
                 visible: (root.report.with_rtk || []).length > 0
-                text: "Top savings"
+                text: root.t("Top savings")
                 font.weight: Font.DemiBold
                 color: Theme.primary
             }
@@ -279,7 +285,7 @@ PluginComponent {
             Row {
                 spacing: Theme.spacingS
                 DankButton {
-                    text: "Atualizar"
+                    text: root.t("Refresh")
                     onClicked: root.refresh()
                 }
             }

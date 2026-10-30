@@ -20,6 +20,11 @@ PluginComponent {
     readonly property string helper: Quickshell.env("HOME") + "/.config/scripts/obs-rec-status.py"
     readonly property bool hot: status.recording || status.streaming
     readonly property bool live: status.connected && hot
+    readonly property string pluginId: "obsRec"
+
+    function t(term) {
+        return I18n.trFor(pluginId, term)
+    }
 
     function refresh() {
         proc.command = [helper, "status"]
@@ -145,10 +150,10 @@ PluginComponent {
 
             StyledText {
                 text: !root.status.connected
-                      ? "OBS offline"
+                      ? root.t("OBS offline")
                       : (root.status.recording
-                         ? (root.status.paused ? "Gravando (pausado) " : "Gravando ") + root.fmtDur(root.status.duration_sec)
-                         : "Conectado · não gravando")
+                         ? (root.status.paused ? root.t("Recording (paused) ") : root.t("Recording ")) + root.fmtDur(root.status.duration_sec)
+                         : root.t("Connected · not recording"))
                       + (root.status.streaming ? " · LIVE" : "")
                 color: Theme.surfaceText
                 font.pixelSize: Theme.fontSizeSmall
@@ -159,16 +164,16 @@ PluginComponent {
             Row {
                 spacing: Theme.spacingS
                 DankButton {
-                    text: root.status.recording || root.status.paused ? "Pause/Resume" : "Rec"
+                    text: root.status.recording || root.status.paused ? root.t("Pause/Resume") : root.t("Rec")
                     onClicked: root.runAction(root.status.recording || root.status.paused ? "toggle-pause" : "toggle-record")
                 }
                 DankButton {
-                    text: "Stop"
+                    text: root.t("Stop")
                     enabled: root.status.recording || root.status.paused
                     onClicked: root.runAction("stop")
                 }
                 DankButton {
-                    text: "Atualizar"
+                    text: root.t("Refresh")
                     onClicked: root.refresh()
                 }
             }

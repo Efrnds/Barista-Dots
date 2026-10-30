@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Barista
+Description=Clean Linux logo + Mac-style progress bar
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/barista
+ScriptFile=/usr/share/plymouth/themes/barista/barista.script

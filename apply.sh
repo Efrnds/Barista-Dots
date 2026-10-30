@@ -112,9 +112,13 @@ for f in .zshrc .bashrc .gitconfig; do
 done
 
 if [[ -d "$DOTFILES/wallpapers" ]]; then
-  mkdir -p "$HOME/Pictures" "$HOME/Imagens"
-  link_path "$DOTFILES/wallpapers" "$HOME/Pictures/wallpapers"
-  link_path "$DOTFILES/wallpapers" "$HOME/Imagens/wallpapers"
+  # shellcheck disable=SC1090
+  [[ -f "$HOME/.config/user-dirs.dirs" ]] && . "$HOME/.config/user-dirs.dirs"
+  pics="${XDG_PICTURES_DIR:-$HOME/Pictures}"
+  # user-dirs.dirs costuma ter $HOME literal
+  pics="${pics//\$HOME/$HOME}"
+  mkdir -p "$pics"
+  link_path "$DOTFILES/wallpapers" "$pics/wallpapers"
 fi
 
 install_git_hooks

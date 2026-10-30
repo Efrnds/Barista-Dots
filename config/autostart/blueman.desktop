@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Blueman Applet
+Comment=Disabled — DMS handles Bluetooth
+Exec=blueman-applet
+Icon=blueman
+Terminal=false
+Categories=System;
+AutostartCondition=false
+Hidden=true
+X-GNOME-Autostart-enabled=false

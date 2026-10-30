@@ -74,6 +74,20 @@ enable_dms_greeter() {
   else
     need_sudo dms greeter install -y 2>/dev/null || need_sudo dms greeter enable 2>/dev/null || true
   fi
+  # Deploy greetd config with @USER@ / @HOME@ substituídos
+  if [[ -f "$ROOT/greetd/config.toml" ]]; then
+    echo "[session] deploy /etc/greetd/config.toml"
+    local tmp
+    tmp="$(mktemp)"
+    sed "s|@USER@|${USER}|g; s|@HOME@|${HOME}|g" "$ROOT/greetd/config.toml" >"$tmp"
+    need_sudo install -m644 "$tmp" /etc/greetd/config.toml
+    rm -f "$tmp"
+  fi
+  if [[ -f "$ROOT/greetd/greetd.pam" ]]; then
+    echo "[session] deploy /etc/pam.d/greetd (backup first)"
+    need_sudo cp -n /etc/pam.d/greetd /etc/pam.d/greetd.pre-barista 2>/dev/null || true
+    need_sudo install -m644 "$ROOT/greetd/greetd.pam" /etc/pam.d/greetd
+  fi
   need_sudo systemctl enable greetd
   need_sudo systemctl set-default graphical.target 2>/dev/null || true
   return 0

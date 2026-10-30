@@ -19,6 +19,11 @@ PluginComponent {
     })
 
     readonly property string helper: Quickshell.env("HOME") + "/.config/scripts/freela-timer.sh"
+    readonly property string pluginId: "freelaTimer"
+
+    function t(term) {
+        return I18n.trFor(pluginId, term)
+    }
 
     function refresh() {
         proc.command = [helper, "status"]
@@ -80,7 +85,7 @@ PluginComponent {
         StyledText {
             text: root.report.running
                   ? ((root.report.project || "?") + " " + root.report.elapsed)
-                  : ("hoje " + (root.report.today || "0m"))
+                  : root.t("today %1").arg(root.report.today || "0m")
             font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
             color: Theme.widgetTextColor || Theme.surfaceText
             anchors.verticalCenter: parent.verticalCenter
@@ -109,17 +114,17 @@ PluginComponent {
             width: 300
 
             StyledText {
-                text: "Freela timer"
+                text: root.t("Freela timer")
                 font.pixelSize: Theme.fontSizeLarge
                 font.weight: Font.DemiBold
                 color: Theme.surfaceText
             }
 
             StyledText {
-                text: root.report.running
+                text: (root.report.running
                       ? ("▶ " + root.report.project + " · " + root.report.elapsed)
-                      : "Parado"
-                      + " · hoje " + root.report.today
+                      : root.t("Stopped"))
+                      + root.t(" · today %1").arg(root.report.today)
                 color: Theme.surfaceText
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.Wrap
@@ -129,18 +134,18 @@ PluginComponent {
             Row {
                 spacing: Theme.spacingS
                 DankButton {
-                    text: "Parar"
+                    text: root.t("Stop")
                     enabled: root.report.running
                     onClicked: root.run("stop")
                 }
                 DankButton {
-                    text: "Atualizar"
+                    text: root.t("Refresh")
                     onClicked: root.refresh()
                 }
             }
 
             StyledText {
-                text: "Projetos"
+                text: root.t("Projects")
                 font.weight: Font.DemiBold
                 color: Theme.primary
             }
@@ -163,7 +168,7 @@ PluginComponent {
                     }
 
                     DankButton {
-                        text: modelData.active ? "Stop" : "Start"
+                        text: modelData.active ? root.t("Stop") : root.t("Start")
                         onClicked: root.run("toggle", modelData.name)
                     }
                 }

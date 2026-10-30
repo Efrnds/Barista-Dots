@@ -1,0 +1,80 @@
+# Barista — logo + barrinha Mac (enche 0→100, sem bounce)
+
+Window.SetBackgroundTopColor(0.00, 0.00, 0.00);
+Window.SetBackgroundBottomColor(0.00, 0.00, 0.00);
+
+logo.image = Image("logo.png");
+logo.sprite = Sprite(logo.image);
+logo.sprite.SetOpacity(1.0);
+
+track.image = Image("progress-box.png");
+track.sprite = Sprite(track.image);
+track.sprite.SetOpacity(0.55);
+
+bar.image = Image("progress-bar.png");
+bar.sprite = Sprite();
+bar.sprite.SetOpacity(1.0);
+
+# progresso visual 0..1
+progress = 0.0;
+reported = 0.0;
+# ~55 refresh/s → 0.0022 ≈ chega a ~0.9 em ~7.5s
+step = 0.0022;
+
+fun place() {
+  w = Window.GetWidth();
+  h = Window.GetHeight();
+
+  logo.sprite.SetX(w / 2 - logo.image.GetWidth() / 2);
+  logo.sprite.SetY(h / 2 - logo.image.GetHeight() / 2 - h * 0.04);
+
+  track_y = logo.sprite.GetY() + logo.image.GetHeight() + h * 0.045;
+  track_x = w / 2 - track.image.GetWidth() / 2;
+  track.sprite.SetX(track_x);
+  track.sprite.SetY(track_y);
+  bar.sprite.SetX(track_x);
+  bar.sprite.SetY(track_y);
+}
+
+fun paint_bar(frac) {
+  if (frac < 0.0) { frac = 0.0; }
+  if (frac > 1.0) { frac = 1.0; }
+  bw = bar.image.GetWidth() * frac;
+  if (bw < 1.0) {
+    bar.sprite.SetOpacity(0);
+  } else {
+    bar.sprite.SetOpacity(1);
+    bar.sprite.SetImage(bar.image.Scale(bw, bar.image.GetHeight()));
+  }
+}
+
+fun on_progress(duration, p) {
+  # usa progresso real só se estiver à frente (nunca volta)
+  if (p > reported) {
+    reported = p;
+  }
+}
+
+fun on_refresh() {
+  # avança sempre (estilo Mac); não fica preso em 15%
+  target = reported;
+  # piso temporal — sobe sozinho até ~92%
+  if (progress < 0.92) {
+    progress = progress + step;
+  }
+  # se o sistema reportar mais, acompanha com ease
+  if (reported > progress) {
+    progress = progress + (reported - progress) * 0.18;
+  }
+  # nunca diminui
+  if (progress > 1.0) {
+    progress = 1.0;
+  }
+  place();
+  paint_bar(progress);
+}
+
+Plymouth.SetBootProgressFunction(on_progress);
+Plymouth.SetRefreshFunction(on_refresh);
+place();
+paint_bar(0.0);

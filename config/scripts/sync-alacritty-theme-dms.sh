@@ -27,7 +27,8 @@ def dank(i: int) -> str:
     return hx(dank16[f"color{i}"]["dark"])
 
 bg = hx(colors_dark["background"])
-fg = hx(colors_dark["on_background"])
+# on_surface is readable body text; on_background is often a muted/dim tone
+fg = hx(colors_dark.get("on_surface") or colors_dark["on_background"])
 sel = hx(colors_dark.get("inverse_primary", colors_dark.get("primary", "#3E4953")))
 regular = [dank(i) for i in range(8)]
 bright = [dank(i) for i in range(8, 16)]

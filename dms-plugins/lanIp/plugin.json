@@ -1,0 +1,18 @@
+{
+  "id": "lanIp",
+  "name": "LAN IP",
+  "description": "Shows local IP. Hover for details; click copies to clipboard.",
+  "version": "1.0.0",
+  "author": "eduardo",
+  "type": "widget",
+  "capabilities": [
+    "dankbar-widget"
+  ],
+  "component": "./LanIpWidget.qml",
+  "icon": "lan",
+  "requires_dms": ">=1.2.0",
+  "permissions": [
+    "settings_read",
+    "process"
+  ]
+}
