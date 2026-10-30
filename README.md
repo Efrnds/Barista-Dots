@@ -149,19 +149,6 @@ Pastas XDG (`Pictures` / `Imagens`, etc.) vêm de `~/.config/user-dirs.dirs` —
 
 ---
 
-## Fluxo entre máquinas
-
-```bash
-# desta máquina
-~/dotfiles/import.sh
-cd ~/dotfiles && git add -A && git commit -m "sync" && git push
-
-# outra máquina
-~/dotfiles/update.sh
-```
-
----
-
 ## O que é versionado
 
 | Repo | Destino |
